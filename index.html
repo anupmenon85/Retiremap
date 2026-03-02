@@ -19,18 +19,40 @@
       border: 1px solid #1e2d45;
       border-radius: 14px;
     }
+    /* Time-period pills */
     .pill {
       border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 13px;
+      padding: 4px 11px;
+      font-size: 12px;
       font-weight: 500;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.15s;
       white-space: nowrap;
     }
-    .pill.active  { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
-    .pill:not(.active) { background: #111827; color: #94a3b8; border-color: #1e2d45; }
+    .pill.active          { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+    .pill:not(.active)    { background: #111827; color: #94a3b8; border-color: #1e2d45; }
+    /* Account segmented control */
+    .seg-btn {
+      padding: 4px 12px; font-size: 12px; font-weight: 500;
+      cursor: pointer; background: transparent;
+      color: #475569; border: 1px solid #1e2d45;
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .seg-btn:first-child             { border-radius: 8px 0 0 8px; }
+    .seg-btn:last-child              { border-radius: 0 8px 8px 0; }
+    .seg-btn:not(:first-child)       { border-left: none; }
+    .seg-btn.active                  { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+    .seg-btn.active + .seg-btn       { border-left-color: #1d4ed8; }
+    /* Chart tabs */
+    .chart-tab {
+      padding: 8px 16px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: none; background: none;
+      color: #475569; border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .chart-tab.active { color: #60a5fa; border-bottom-color: #3b82f6; }
+    /* Misc */
     .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; margin-bottom: 4px; }
     .positive { color: #10b981; }
     .negative { color: #ef4444; }
@@ -50,91 +72,95 @@
     ::-webkit-scrollbar-thumb { background: #1e2d45; border-radius: 4px; }
     .sync-btn {
       background: #1d4ed8; color: white; border: none;
-      padding: 9px 20px; border-radius: 9px; font-size: 14px;
+      padding: 6px 14px; border-radius: 8px; font-size: 13px;
       font-weight: 600; cursor: pointer; transition: background 0.15s;
     }
-    .sync-btn:hover { background: #2563eb; }
+    .sync-btn:hover    { background: #2563eb; }
     .sync-btn:disabled { background: #1e3a6e; color: #4b6cb7; cursor: default; }
+    .toggle-icon { transition: transform 0.2s; display: inline-block; }
+    .toggle-icon.closed { transform: rotate(-90deg); }
   </style>
 </head>
 <body>
 
 <!-- ── HEADER ── -->
-<div style="background:#080d1a;border-bottom:1px solid #1e2d45;padding:14px 20px;position:sticky;top:0;z-index:10;">
+<div style="background:#080d1a;border-bottom:1px solid #1e2d45;padding:10px 20px;position:sticky;top:0;z-index:10;">
   <div style="max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;">
-    <div>
-      <span style="font-size:22px;font-weight:800;color:#f1f5f9;">Option</span><span style="font-size:22px;font-weight:800;color:#3b82f6;">Flow</span>
-      <div style="font-size:11px;color:#475569;margin-top:1px;letter-spacing:0.04em;">OPTIONS INCOME TRACKER</div>
+    <div style="display:flex;align-items:baseline;gap:6px;">
+      <span style="font-size:20px;font-weight:800;color:#f1f5f9;">Option</span><span style="font-size:20px;font-weight:800;color:#3b82f6;">Flow</span>
     </div>
-    <div style="text-align:right;">
-      <button class="sync-btn" onclick="handleSync()" id="syncBtn">↻ Sync Now</button>
-      <div style="font-size:10px;color:#334155;margin-top:4px;" id="lastSync">Last sync: never</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="font-size:10px;color:#334155;" id="lastSync">Never synced</div>
+      <button class="sync-btn" onclick="handleSync()" id="syncBtn">↻ Sync</button>
     </div>
   </div>
 </div>
 
 <!-- ── MAIN ── -->
-<div style="max-width:860px;margin:0 auto;padding:20px 16px 40px;">
+<div style="max-width:860px;margin:0 auto;padding:14px 16px 40px;">
 
-  <!-- Account Filter -->
-  <div style="margin-bottom:18px;">
-    <div class="stat-label" style="margin-bottom:8px;">Accounts</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="accountFilters">
-      <button class="pill active" onclick="setAccount('all')"          data-account="all">All Accounts</button>
-      <button class="pill"        onclick="setAccount('individual')"   data-account="individual">Individual ···1234</button>
-      <button class="pill"        onclick="setAccount('ira')"          data-account="ira">Roth IRA ···5678</button>
+  <!-- ── Combined Filter Row ── -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+    <!-- Account segmented control -->
+    <div style="display:flex;" id="accountFilters">
+      <button class="seg-btn active" onclick="setAccount('all')"        data-account="all">All</button>
+      <button class="seg-btn"        onclick="setAccount('individual')" data-account="individual">···1234</button>
+      <button class="seg-btn"        onclick="setAccount('ira')"        data-account="ira">IRA ···5678</button>
     </div>
-  </div>
-
-  <!-- Time Filter -->
-  <div style="margin-bottom:22px;">
-    <div style="display:flex;gap:6px;flex-wrap:wrap;" id="timeFilters">
-      <button class="pill" onclick="setPeriod('1M')"  data-period="1M">1M</button>
-      <button class="pill" onclick="setPeriod('3M')"  data-period="3M">3M</button>
+    <!-- Time period pills -->
+    <div style="display:flex;gap:5px;" id="timeFilters">
+      <button class="pill"        onclick="setPeriod('1M')"  data-period="1M">1M</button>
+      <button class="pill"        onclick="setPeriod('3M')"  data-period="3M">3M</button>
       <button class="pill active" onclick="setPeriod('YTD')" data-period="YTD">YTD</button>
-      <button class="pill" onclick="setPeriod('1Y')"  data-period="1Y">1Y</button>
-      <button class="pill" onclick="setPeriod('ALL')" data-period="ALL">All Time</button>
+      <button class="pill"        onclick="setPeriod('1Y')"  data-period="1Y">1Y</button>
+      <button class="pill"        onclick="setPeriod('ALL')" data-period="ALL">All</button>
     </div>
   </div>
 
-  <!-- Summary Cards -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;" id="summaryCards"></div>
+  <!-- ── Summary Cards ── -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="summaryCards"></div>
 
-  <!-- Monthly Cash Flow Chart -->
-  <div class="card" style="padding:20px;margin-bottom:14px;">
-    <div style="font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;">Monthly Cash Flow</div>
-    <div style="position:relative;height:190px;"><canvas id="barChart"></canvas></div>
+  <!-- ── Tabbed Chart Card ── -->
+  <div class="card" style="margin-bottom:18px;">
+    <div style="display:flex;border-bottom:1px solid #1e2d45;padding:0 14px;">
+      <button class="chart-tab active" id="tabBar"  onclick="setChartTab('bar')">Monthly Cash Flow</button>
+      <button class="chart-tab"        id="tabLine" onclick="setChartTab('line')">Cumulative</button>
+    </div>
+    <div style="padding:16px;">
+      <div id="barPane"  style="position:relative;height:175px;"><canvas id="barChart"></canvas></div>
+      <div id="linePane" style="position:relative;height:175px;display:none;"><canvas id="lineChart"></canvas></div>
+    </div>
   </div>
 
-  <!-- Cumulative Chart -->
-  <div class="card" style="padding:20px;margin-bottom:24px;">
-    <div style="font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;">Cumulative Income</div>
-    <div style="position:relative;height:150px;"><canvas id="lineChart"></canvas></div>
-  </div>
-
-  <!-- Trade Log -->
+  <!-- ── Trade Log (collapsible) ── -->
   <div class="card">
-    <div style="padding:16px 20px;border-bottom:1px solid #1e2d45;display:flex;justify-content:space-between;align-items:center;">
+    <div style="padding:13px 18px;border-bottom:1px solid #1e2d45;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;"
+         onclick="toggleTrades()">
       <div style="font-size:14px;font-weight:700;color:#cbd5e1;">Trade Log</div>
-      <div style="font-size:12px;color:#475569;" id="tradeCount"></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:12px;color:#475569;" id="tradeCount"></span>
+        <span class="toggle-icon" id="tradeToggle">▾</span>
+      </div>
     </div>
-    <div style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr>
-            <th>Opened</th>
-            <th>Position</th>
-            <th>Acct</th>
-            <th>Status</th>
-            <th style="text-align:right;">Cash Flow</th>
-          </tr>
-        </thead>
-        <tbody id="tradeBody"></tbody>
-      </table>
+    <div id="tradePanel">
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Opened</th>
+              <th>Position</th>
+              <th>Acct</th>
+              <th>Status</th>
+              <th style="text-align:right;">Cash Flow</th>
+            </tr>
+          </thead>
+          <tbody id="tradeBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <div style="text-align:center;font-size:11px;color:#1e2d45;margin-top:28px;">
+  <div style="text-align:center;font-size:11px;color:#1e2d45;margin-top:24px;">
     POC · Mock Data · TastyTrade live sync coming next
   </div>
 </div>
@@ -142,9 +168,6 @@
 <script>
 // ═══════════════════════════════════════════════════════════
 // MOCK DATA
-// Each trade: STO premium received, BTC premium paid (0 if expired)
-// cashFlow = (sto - btc) * contracts * 100
-// open positions show premium at risk (not yet realized)
 // ═══════════════════════════════════════════════════════════
 const TRADES = [
   // ── Individual ···1234 ─────────────────────────────────
@@ -210,8 +233,8 @@ const TRADES = [
 // ═══════════════════════════════════════════════════════════
 const TODAY = new Date('2026-03-02');
 
-function cashFlow(t)   { return t.status !== 'open' ? (t.sto - t.btc) * t.contracts * 100 : null; }
-function openPremium(t){ return t.status === 'open'  ? t.sto * t.contracts * 100 : null; }
+function cashFlow(t)    { return t.status !== 'open' ? (t.sto - t.btc) * t.contracts * 100 : null; }
+function openPremium(t) { return t.status === 'open'  ? t.sto * t.contracts * 100 : null; }
 
 function fmt(n) {
   const abs = Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
@@ -224,24 +247,26 @@ function periodStart(p) {
   if (p === '3M')  { d.setMonth(d.getMonth() - 3); return d; }
   if (p === 'YTD') return new Date('2026-01-01');
   if (p === '1Y')  { d.setFullYear(d.getFullYear() - 1); return d; }
-  return new Date('2000-01-01'); // ALL
+  return new Date('2000-01-01');
 }
 
 function monthsInPeriod(p) {
   if (p === '1M')  return 1;
   if (p === '3M')  return 3;
-  if (p === 'YTD') return TODAY.getMonth() + 1; // Jan=0
+  if (p === 'YTD') return TODAY.getMonth() + 1;
   if (p === '1Y')  return 12;
-  return null; // ALL — calculate dynamically
+  return null;
 }
 
 // ═══════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════
-let selAccount = 'all';
-let selPeriod  = 'YTD';
-let barInst    = null;
-let lineInst   = null;
+let selAccount   = 'all';
+let selPeriod    = 'YTD';
+let activeChart  = 'bar';
+let tradesOpen   = true;
+let barInst      = null;
+let lineInst     = null;
 
 function filtered() {
   const start = periodStart(selPeriod);
@@ -269,16 +294,30 @@ function setPeriod(p) {
   render();
 }
 
+function setChartTab(tab) {
+  activeChart = tab;
+  document.getElementById('barPane').style.display  = tab === 'bar'  ? '' : 'none';
+  document.getElementById('linePane').style.display = tab === 'line' ? '' : 'none';
+  document.getElementById('tabBar').classList.toggle('active',  tab === 'bar');
+  document.getElementById('tabLine').classList.toggle('active', tab === 'line');
+}
+
+function toggleTrades() {
+  tradesOpen = !tradesOpen;
+  document.getElementById('tradePanel').style.display = tradesOpen ? '' : 'none';
+  document.getElementById('tradeToggle').classList.toggle('closed', !tradesOpen);
+}
+
 function handleSync() {
   const btn = document.getElementById('syncBtn');
   btn.textContent = '↻ Syncing…';
   btn.disabled = true;
   setTimeout(() => {
-    btn.textContent = '↻ Sync Now';
+    btn.textContent = '↻ Sync';
     btn.disabled = false;
     const now = new Date();
     document.getElementById('lastSync').textContent =
-      'Last sync: ' + now.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+      'Synced ' + now.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
   }, 1800);
 }
 
@@ -291,41 +330,38 @@ function renderCards(trades) {
   const totalCF = closed.reduce((s, t) => s + cashFlow(t), 0);
   const totalOP = open.reduce((s, t) => s + openPremium(t), 0);
 
-  // avg/month
   let mo = monthsInPeriod(selPeriod);
   if (!mo) {
-    // ALL: count distinct months with closed trades
     const keys = new Set(closed.map(t => t.date.slice(0,7)));
     mo = keys.size || 1;
   }
   const avg = Math.round(totalCF / mo);
 
-  // this month
   const thisMonStart = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
   const thisMo = closed
     .filter(t => new Date(t.date) >= thisMonStart)
     .reduce((s, t) => s + cashFlow(t), 0);
 
   document.getElementById('summaryCards').innerHTML = `
-    <div class="card" style="padding:18px;">
+    <div class="card" style="padding:16px;">
       <div class="stat-label">Total Cash Flow</div>
       <div style="font-size:26px;font-weight:800;" class="positive">${fmt(totalCF)}</div>
-      <div style="font-size:11px;color:#334155;margin-top:5px;">${closed.length} closed trades</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">${closed.length} closed trades</div>
     </div>
-    <div class="card" style="padding:18px;">
+    <div class="card" style="padding:16px;">
       <div class="stat-label">This Month</div>
       <div style="font-size:26px;font-weight:800;" class="positive">${fmt(thisMo)}</div>
-      <div style="font-size:11px;color:#334155;margin-top:5px;">March 2026</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">March 2026</div>
     </div>
-    <div class="card" style="padding:18px;">
+    <div class="card" style="padding:16px;">
       <div class="stat-label">Open Premium</div>
       <div style="font-size:26px;font-weight:800;color:#f59e0b;">${fmt(totalOP)}</div>
-      <div style="font-size:11px;color:#334155;margin-top:5px;">${open.length} open position${open.length!==1?'s':''}</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">${open.length} open position${open.length!==1?'s':''}</div>
     </div>
-    <div class="card" style="padding:18px;">
+    <div class="card" style="padding:16px;">
       <div class="stat-label">Avg / Month</div>
       <div style="font-size:26px;font-weight:800;color:#60a5fa;">${fmt(avg)}</div>
-      <div style="font-size:11px;color:#334155;margin-top:5px;">Based on ${mo} month${mo!==1?'s':''}</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">Based on ${mo} month${mo!==1?'s':''}</div>
     </div>`;
 }
 
@@ -348,11 +384,17 @@ function renderCharts(trades) {
   let running = 0;
   const cumul = values.map(v => { running += v; return running; });
 
-  Chart.defaults.color        = '#475569';
-  Chart.defaults.borderColor  = '#1a2540';
+  Chart.defaults.color       = '#475569';
+  Chart.defaults.borderColor = '#1a2540';
 
   if (barInst)  barInst.destroy();
   if (lineInst) lineInst.destroy();
+
+  const scaleOpts = {
+    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+    y: { grid: { color: '#1a2540' }, ticks: { font: { size: 10 }, callback: v => '$' + v.toLocaleString() } }
+  };
+  const tooltipFmt = { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } };
 
   barInst = new Chart(document.getElementById('barChart'), {
     type: 'bar',
@@ -362,19 +404,13 @@ function renderCharts(trades) {
         data: values,
         backgroundColor: values.map(v => v >= 0 ? 'rgba(16,185,129,0.65)' : 'rgba(239,68,68,0.65)'),
         borderColor:     values.map(v => v >= 0 ? '#10b981' : '#ef4444'),
-        borderWidth: 1,
-        borderRadius: 5,
+        borderWidth: 1, borderRadius: 5,
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: {
-        callbacks: { label: ctx => ' ' + fmt(ctx.raw) }
-      }},
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-        y: { grid: { color: '#1a2540' }, ticks: { font: { size: 10 }, callback: v => '$' + v.toLocaleString() } }
-      }
+      plugins: { legend: { display: false }, tooltip: tooltipFmt },
+      scales: scaleOpts,
     }
   });
 
@@ -384,21 +420,14 @@ function renderCharts(trades) {
       labels,
       datasets: [{
         data: cumul,
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59,130,246,0.08)',
-        fill: true, tension: 0.35,
-        pointRadius: 3, pointBackgroundColor: '#3b82f6',
+        borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)',
+        fill: true, tension: 0.35, pointRadius: 3, pointBackgroundColor: '#3b82f6',
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: {
-        callbacks: { label: ctx => ' ' + fmt(ctx.raw) }
-      }},
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-        y: { grid: { color: '#1a2540' }, ticks: { font: { size: 10 }, callback: v => '$' + v.toLocaleString() } }
-      }
+      plugins: { legend: { display: false }, tooltip: tooltipFmt },
+      scales: scaleOpts,
     }
   });
 }
@@ -424,9 +453,9 @@ function renderTable(trades) {
       ? `<span class="${cf>=0?'positive':'negative'}" style="font-weight:700;">${fmt(cf)}</span>`
       : `<span style="color:#f59e0b;font-weight:700;">${fmt(op)}</span>`;
     const [bc, bl] = BADGE[t.status] || BADGE.open;
-    const acct = t.acct === 'individual' ? '···1234' : '···5678';
-    const desc = `${t.strike}C  ${t.exp}`;
-    const label = t.contracts > 1 ? `${t.contracts}x CC` : 'CC';
+    const acct    = t.acct === 'individual' ? '···1234' : '···5678';
+    const desc    = `${t.strike}C  ${t.exp}`;
+    const label   = t.contracts > 1 ? `${t.contracts}x CC` : 'CC';
     const dateStr = new Date(t.date).toLocaleDateString('en-US', {month:'short', day:'numeric'});
     return `<tr>
       <td><div style="font-weight:600;font-size:13px;">${dateStr}</div>
