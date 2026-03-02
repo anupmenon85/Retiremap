@@ -789,7 +789,7 @@ function openBrokerConnect(id) {
       <p style="font-size:11px;color:#1e3047;line-height:1.5;margin:0 0 16px;">
         Your login credentials are never shared with or stored by OptionFlow.
       </p>
-      <button onclick="triggerOAuth('${b.name}')"
+      <button onclick="triggerOAuth('${id}','${b.name}')"
               style="width:100%;padding:10px;background:#1d4ed8;border:none;border-radius:9px;
                      color:#fff;font-size:13px;font-weight:700;cursor:pointer;
                      display:flex;align-items:center;justify-content:center;gap:7px;box-sizing:border-box;">
@@ -804,29 +804,86 @@ function openBrokerConnect(id) {
     </div>`;
   area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-function triggerOAuth(name) {
+function triggerOAuth(id, name) {
   const area = document.getElementById('brokerConnectArea');
+  // Step 1 — spinner
   area.innerHTML = `
     <div style="background:#06101e;border:1px solid #192c42;border-radius:12px;
-                padding:22px 16px;text-align:center;">
-      <div style="width:36px;height:36px;border-radius:50%;border:2px solid #1d4ed8;
+                padding:28px 16px;text-align:center;">
+      <div style="width:34px;height:34px;border-radius:50%;border:2.5px solid #1d4ed8;
                   border-top-color:transparent;margin:0 auto 14px;
-                  animation:spin 0.8s linear infinite;"></div>
-      <div style="font-size:13px;font-weight:700;color:#c8d8f0;margin-bottom:6px;">
-        Opening ${name}…</div>
-      <div style="font-size:11px;color:#2d4a6a;line-height:1.5;">
-        Live sync is coming in the next release.<br>Manual CSV import is available now.</div>
+                  animation:spin 0.75s linear infinite;"></div>
+      <div style="font-size:13px;font-weight:700;color:#c8d8f0;margin-bottom:4px;">
+        Connecting to ${name}…</div>
+      <div style="font-size:11px;color:#2d4a6a;">Waiting for authorization</div>
     </div>`;
+  // Step 2 — success
   setTimeout(() => {
+    // Mark tile as connected
+    const tile = document.getElementById('tile-' + id);
+    if (tile) {
+      tile.style.opacity = '1';
+      tile.style.borderColor = '#16a34a55';
+      const btn = tile.querySelector('.sign-in-btn');
+      if (btn) {
+        btn.style.background  = 'rgba(22,163,74,0.13)';
+        btn.style.borderColor = 'rgba(22,163,74,0.35)';
+        btn.style.color       = '#4ade80';
+        btn.style.cursor      = 'default';
+        btn.onclick           = null;
+        btn.innerHTML         = `<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg> Connected`;
+      }
+    }
     area.innerHTML = `
-      <div style="background:#06101e;border:1px solid #192c42;border-radius:12px;
-                  padding:18px 16px;text-align:center;">
-        <div style="font-size:22px;margin-bottom:8px;">⚡</div>
-        <div style="font-size:13px;font-weight:700;color:#c8d8f0;margin-bottom:5px;">Coming in v0.3</div>
-        <div style="font-size:11px;color:#2d4a6a;line-height:1.6;">
-          Live ${name} sync is in development.<br>Use CSV import while you wait.</div>
+      <div style="background:#06101e;border:1px solid #16a34a44;border-radius:12px;padding:18px 16px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:34px;height:34px;border-radius:50%;background:#16a34a1a;
+                      border:1.5px solid #16a34a55;display:flex;align-items:center;
+                      justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4ade80"
+                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8l4 4 6-6"/></svg>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#c8d8f0;">${name} connected</div>
+            <div style="font-size:11px;color:#2d6a40;margin-top:1px;">Read-only · positions &amp; history</div>
+          </div>
+        </div>
+        <div style="background:#080f1c;border:1px solid #14253a;border-radius:9px;padding:11px 13px;
+                    display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#94a3b8;">Individual ···4321</div>
+            <div style="font-size:11px;color:#1e3047;margin-top:2px;">Synced just now · 47 trades loaded</div>
+          </div>
+          <div style="width:7px;height:7px;border-radius:50%;background:#4ade80;
+                      box-shadow:0 0 6px #4ade8088;flex-shrink:0;"></div>
+        </div>
+        <button onclick="disconnectBroker('${id}')"
+                style="width:100%;padding:7px;background:transparent;border:1px solid #1e2d45;
+                       border-radius:8px;color:#334155;font-size:11px;cursor:pointer;
+                       transition:all 0.15s;box-sizing:border-box;"
+                onmouseover="this.style.color='#475569';this.style.borderColor='#2d4060'"
+                onmouseout="this.style.color='#334155';this.style.borderColor='#1e2d45'">
+          Disconnect account</button>
       </div>`;
-  }, 1800);
+  }, 1600);
+}
+function disconnectBroker(id) {
+  const tile = document.getElementById('tile-' + id);
+  if (tile) {
+    tile.style.opacity     = '';
+    tile.style.borderColor = '';
+    const btn = tile.querySelector('.sign-in-btn');
+    if (btn) {
+      btn.style.background  = '';
+      btn.style.borderColor = '';
+      btn.style.color       = '';
+      btn.style.cursor      = '';
+      btn.onclick           = () => openBrokerConnect(id);
+      btn.innerHTML         = `Sign in <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h6M5 2l3 3-3 3"/></svg>`;
+    }
+  }
+  document.getElementById('brokerConnectArea').style.display = 'none';
 }
 
 // ═══════════════════════════════════════════════════════════
