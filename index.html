@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>OptionFlow — Options Income Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #080d1a;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #1e2d45;
+      border-radius: 14px;
+    }
+    .pill {
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .pill.active  { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+    .pill:not(.active) { background: #111827; color: #94a3b8; border-color: #1e2d45; }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; margin-bottom: 4px; }
+    .positive { color: #10b981; }
+    .negative { color: #ef4444; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;
+         padding: 10px 14px; text-align: left; border-bottom: 1px solid #1e2d45; }
+    td { padding: 11px 14px; font-size: 13px; border-bottom: 1px solid #0d1626; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #141e31; }
+    .badge { font-size: 11px; padding: 3px 9px; border-radius: 5px; font-weight: 600; display: inline-block; }
+    .b-green  { background: #052e1c; color: #10b981; }
+    .b-blue   { background: #0c2044; color: #60a5fa; }
+    .b-yellow { background: #2d1a02; color: #f59e0b; }
+    .b-gray   { background: #1a2336; color: #94a3b8; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #1e2d45; border-radius: 4px; }
+    .sync-btn {
+      background: #1d4ed8; color: white; border: none;
+      padding: 9px 20px; border-radius: 9px; font-size: 14px;
+      font-weight: 600; cursor: pointer; transition: background 0.15s;
+    }
+    .sync-btn:hover { background: #2563eb; }
+    .sync-btn:disabled { background: #1e3a6e; color: #4b6cb7; cursor: default; }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div style="background:#080d1a;border-bottom:1px solid #1e2d45;padding:14px 20px;position:sticky;top:0;z-index:10;">
+  <div style="max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <span style="font-size:22px;font-weight:800;color:#f1f5f9;">Option</span><span style="font-size:22px;font-weight:800;color:#3b82f6;">Flow</span>
+      <div style="font-size:11px;color:#475569;margin-top:1px;letter-spacing:0.04em;">OPTIONS INCOME TRACKER</div>
+    </div>
+    <div style="text-align:right;">
+      <button class="sync-btn" onclick="handleSync()" id="syncBtn">↻ Sync Now</button>
+      <div style="font-size:10px;color:#334155;margin-top:4px;" id="lastSync">Last sync: never</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div style="max-width:860px;margin:0 auto;padding:20px 16px 40px;">
+
+  <!-- Account Filter -->
+  <div style="margin-bottom:18px;">
+    <div class="stat-label" style="margin-bottom:8px;">Accounts</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;" id="accountFilters">
+      <button class="pill active" onclick="setAccount('all')"          data-account="all">All Accounts</button>
+      <button class="pill"        onclick="setAccount('individual')"   data-account="individual">Individual ···1234</button>
+      <button class="pill"        onclick="setAccount('ira')"          data-account="ira">Roth IRA ···5678</button>
+    </div>
+  </div>
+
+  <!-- Time Filter -->
+  <div style="margin-bottom:22px;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;" id="timeFilters">
+      <button class="pill" onclick="setPeriod('1M')"  data-period="1M">1M</button>
+      <button class="pill" onclick="setPeriod('3M')"  data-period="3M">3M</button>
+      <button class="pill active" onclick="setPeriod('YTD')" data-period="YTD">YTD</button>
+      <button class="pill" onclick="setPeriod('1Y')"  data-period="1Y">1Y</button>
+      <button class="pill" onclick="setPeriod('ALL')" data-period="ALL">All Time</button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;" id="summaryCards"></div>
+
+  <!-- Monthly Cash Flow Chart -->
+  <div class="card" style="padding:20px;margin-bottom:14px;">
+    <div style="font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;">Monthly Cash Flow</div>
+    <div style="position:relative;height:190px;"><canvas id="barChart"></canvas></div>
+  </div>
+
+  <!-- Cumulative Chart -->
+  <div class="card" style="padding:20px;margin-bottom:24px;">
+    <div style="font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;">Cumulative Income</div>
+    <div style="position:relative;height:150px;"><canvas id="lineChart"></canvas></div>
+  </div>
+
+  <!-- Trade Log -->
+  <div class="card">
+    <div style="padding:16px 20px;border-bottom:1px solid #1e2d45;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:14px;font-weight:700;color:#cbd5e1;">Trade Log</div>
+      <div style="font-size:12px;color:#475569;" id="tradeCount"></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Opened</th>
+            <th>Position</th>
+            <th>Acct</th>
+            <th>Status</th>
+            <th style="text-align:right;">Cash Flow</th>
+          </tr>
+        </thead>
+        <tbody id="tradeBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="text-align:center;font-size:11px;color:#1e2d45;margin-top:28px;">
+    POC · Mock Data · TastyTrade live sync coming next
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// MOCK DATA
+// Each trade: STO premium received, BTC premium paid (0 if expired)
+// cashFlow = (sto - btc) * contracts * 100
+// open positions show premium at risk (not yet realized)
+// ═══════════════════════════════════════════════════════════
+const TRADES = [
+  // ── Individual ···1234 ─────────────────────────────────
+  {id:1,  acct:'individual', sym:'AAPL', strike:180, exp:'03/21', contracts:1, sto:3.20, btc:0.00, status:'expired', date:'2025-03-07'},
+  {id:2,  acct:'individual', sym:'SPY',  strike:510, exp:'03/21', contracts:1, sto:2.45, btc:0.15, status:'closed',  date:'2025-03-10'},
+  {id:3,  acct:'individual', sym:'AAPL', strike:185, exp:'04/17', contracts:1, sto:2.80, btc:2.10, status:'closed',  date:'2025-04-01'},
+  {id:4,  acct:'individual', sym:'SPY',  strike:515, exp:'04/17', contracts:1, sto:3.10, btc:0.00, status:'expired', date:'2025-04-04'},
+  {id:5,  acct:'individual', sym:'NVDA', strike:900, exp:'04/25', contracts:1, sto:11.20,btc:9.50, status:'rolled',  date:'2025-04-14'},
+  {id:6,  acct:'individual', sym:'AAPL', strike:185, exp:'05/16', contracts:1, sto:2.95, btc:0.00, status:'expired', date:'2025-05-02'},
+  {id:7,  acct:'individual', sym:'SPY',  strike:520, exp:'05/16', contracts:1, sto:2.65, btc:0.25, status:'closed',  date:'2025-05-05'},
+  {id:8,  acct:'individual', sym:'AAPL', strike:190, exp:'06/20', contracts:1, sto:3.50, btc:0.00, status:'expired', date:'2025-06-06'},
+  {id:9,  acct:'individual', sym:'SPY',  strike:525, exp:'06/20', contracts:1, sto:3.20, btc:1.80, status:'closed',  date:'2025-06-09'},
+  {id:10, acct:'individual', sym:'AAPL', strike:195, exp:'07/18', contracts:1, sto:2.90, btc:0.00, status:'expired', date:'2025-07-07'},
+  {id:11, acct:'individual', sym:'SPY',  strike:530, exp:'07/18', contracts:1, sto:2.75, btc:0.10, status:'closed',  date:'2025-07-07'},
+  {id:12, acct:'individual', sym:'AAPL', strike:200, exp:'08/15', contracts:1, sto:3.80, btc:1.20, status:'closed',  date:'2025-08-04'},
+  {id:13, acct:'individual', sym:'SPY',  strike:545, exp:'08/22', contracts:1, sto:2.90, btc:0.00, status:'expired', date:'2025-08-08'},
+  {id:14, acct:'individual', sym:'AAPL', strike:205, exp:'09/19', contracts:1, sto:3.10, btc:0.00, status:'expired', date:'2025-09-05'},
+  {id:15, acct:'individual', sym:'SPY',  strike:550, exp:'09/19', contracts:1, sto:3.40, btc:0.30, status:'closed',  date:'2025-09-08'},
+  {id:16, acct:'individual', sym:'AAPL', strike:210, exp:'10/17', contracts:1, sto:2.70, btc:0.00, status:'expired', date:'2025-10-06'},
+  {id:17, acct:'individual', sym:'SPY',  strike:555, exp:'10/17', contracts:1, sto:3.00, btc:2.20, status:'closed',  date:'2025-10-06'},
+  {id:18, acct:'individual', sym:'AAPL', strike:215, exp:'11/21', contracts:1, sto:3.20, btc:0.00, status:'expired', date:'2025-11-07'},
+  {id:19, acct:'individual', sym:'SPY',  strike:580, exp:'11/21', contracts:1, sto:3.50, btc:0.40, status:'closed',  date:'2025-11-10'},
+  {id:20, acct:'individual', sym:'AAPL', strike:220, exp:'12/19', contracts:1, sto:2.90, btc:0.00, status:'expired', date:'2025-12-05'},
+  {id:21, acct:'individual', sym:'SPY',  strike:585, exp:'12/19', contracts:1, sto:3.10, btc:0.90, status:'closed',  date:'2025-12-09'},
+  {id:22, acct:'individual', sym:'AAPL', strike:225, exp:'01/16', contracts:1, sto:3.40, btc:0.00, status:'expired', date:'2026-01-06'},
+  {id:23, acct:'individual', sym:'SPY',  strike:590, exp:'01/16', contracts:1, sto:2.80, btc:0.20, status:'closed',  date:'2026-01-06'},
+  {id:24, acct:'individual', sym:'AAPL', strike:230, exp:'02/21', contracts:1, sto:3.00, btc:0.00, status:'expired', date:'2026-02-07'},
+  {id:25, acct:'individual', sym:'SPY',  strike:595, exp:'02/21', contracts:1, sto:2.50, btc:0.15, status:'closed',  date:'2026-02-10'},
+  {id:26, acct:'individual', sym:'AAPL', strike:235, exp:'03/21', contracts:1, sto:3.20, btc:0.00, status:'open',    date:'2026-03-03'},
+  {id:27, acct:'individual', sym:'SPY',  strike:600, exp:'03/21', contracts:1, sto:2.70, btc:0.00, status:'open',    date:'2026-03-03'},
+
+  // ── Roth IRA ···5678 ───────────────────────────────────
+  {id:28, acct:'ira', sym:'QQQ',  strike:450, exp:'03/21', contracts:2, sto:4.50, btc:0.00, status:'expired', date:'2025-03-07'},
+  {id:29, acct:'ira', sym:'MSFT', strike:420, exp:'03/21', contracts:1, sto:3.20, btc:0.20, status:'closed',  date:'2025-03-10'},
+  {id:30, acct:'ira', sym:'QQQ',  strike:455, exp:'04/17', contracts:2, sto:4.80, btc:0.00, status:'expired', date:'2025-04-04'},
+  {id:31, acct:'ira', sym:'MSFT', strike:425, exp:'04/17', contracts:1, sto:2.90, btc:1.50, status:'closed',  date:'2025-04-04'},
+  {id:32, acct:'ira', sym:'QQQ',  strike:460, exp:'05/16', contracts:2, sto:5.10, btc:0.00, status:'expired', date:'2025-05-02'},
+  {id:33, acct:'ira', sym:'MSFT', strike:430, exp:'05/16', contracts:1, sto:3.40, btc:0.30, status:'closed',  date:'2025-05-05'},
+  {id:34, acct:'ira', sym:'QQQ',  strike:465, exp:'06/20', contracts:2, sto:4.70, btc:1.20, status:'closed',  date:'2025-06-06'},
+  {id:35, acct:'ira', sym:'MSFT', strike:435, exp:'06/20', contracts:1, sto:3.60, btc:0.00, status:'expired', date:'2025-06-09'},
+  {id:36, acct:'ira', sym:'QQQ',  strike:470, exp:'07/18', contracts:2, sto:5.20, btc:0.00, status:'expired', date:'2025-07-07'},
+  {id:37, acct:'ira', sym:'MSFT', strike:440, exp:'07/18', contracts:1, sto:3.10, btc:0.40, status:'closed',  date:'2025-07-07'},
+  {id:38, acct:'ira', sym:'QQQ',  strike:480, exp:'08/22', contracts:2, sto:4.90, btc:0.00, status:'expired', date:'2025-08-08'},
+  {id:39, acct:'ira', sym:'MSFT', strike:445, exp:'08/15', contracts:1, sto:3.80, btc:1.60, status:'rolled',  date:'2025-08-04'},
+  {id:40, acct:'ira', sym:'QQQ',  strike:485, exp:'09/19', contracts:2, sto:5.40, btc:0.00, status:'expired', date:'2025-09-05'},
+  {id:41, acct:'ira', sym:'MSFT', strike:450, exp:'09/19', contracts:1, sto:3.20, btc:0.10, status:'closed',  date:'2025-09-08'},
+  {id:42, acct:'ira', sym:'QQQ',  strike:490, exp:'10/17', contracts:2, sto:4.60, btc:2.10, status:'closed',  date:'2025-10-06'},
+  {id:43, acct:'ira', sym:'MSFT', strike:455, exp:'10/17', contracts:1, sto:2.80, btc:0.00, status:'expired', date:'2025-10-06'},
+  {id:44, acct:'ira', sym:'QQQ',  strike:500, exp:'11/21', contracts:2, sto:5.80, btc:0.00, status:'expired', date:'2025-11-07'},
+  {id:45, acct:'ira', sym:'MSFT', strike:460, exp:'11/21', contracts:1, sto:3.50, btc:0.60, status:'closed',  date:'2025-11-10'},
+  {id:46, acct:'ira', sym:'QQQ',  strike:510, exp:'12/19', contracts:2, sto:5.20, btc:0.00, status:'expired', date:'2025-12-05'},
+  {id:47, acct:'ira', sym:'MSFT', strike:465, exp:'12/19', contracts:1, sto:3.40, btc:1.20, status:'closed',  date:'2025-12-09'},
+  {id:48, acct:'ira', sym:'QQQ',  strike:515, exp:'01/16', contracts:2, sto:5.60, btc:0.00, status:'expired', date:'2026-01-06'},
+  {id:49, acct:'ira', sym:'MSFT', strike:470, exp:'01/16', contracts:1, sto:3.10, btc:0.20, status:'closed',  date:'2026-01-06'},
+  {id:50, acct:'ira', sym:'QQQ',  strike:520, exp:'02/21', contracts:2, sto:5.30, btc:0.00, status:'expired', date:'2026-02-07'},
+  {id:51, acct:'ira', sym:'MSFT', strike:475, exp:'02/21', contracts:1, sto:2.90, btc:0.10, status:'closed',  date:'2026-02-10'},
+  {id:52, acct:'ira', sym:'QQQ',  strike:525, exp:'03/21', contracts:2, sto:5.00, btc:0.00, status:'open',    date:'2026-03-03'},
+  {id:53, acct:'ira', sym:'MSFT', strike:480, exp:'03/21', contracts:1, sto:3.20, btc:0.00, status:'open',    date:'2026-03-03'},
+];
+
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+const TODAY = new Date('2026-03-02');
+
+function cashFlow(t)   { return t.status !== 'open' ? (t.sto - t.btc) * t.contracts * 100 : null; }
+function openPremium(t){ return t.status === 'open'  ? t.sto * t.contracts * 100 : null; }
+
+function fmt(n) {
+  const abs = Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+  return n < 0 ? `-$${abs}` : `$${abs}`;
+}
+
+function periodStart(p) {
+  const d = new Date(TODAY);
+  if (p === '1M')  { d.setMonth(d.getMonth() - 1); return d; }
+  if (p === '3M')  { d.setMonth(d.getMonth() - 3); return d; }
+  if (p === 'YTD') return new Date('2026-01-01');
+  if (p === '1Y')  { d.setFullYear(d.getFullYear() - 1); return d; }
+  return new Date('2000-01-01'); // ALL
+}
+
+function monthsInPeriod(p) {
+  if (p === '1M')  return 1;
+  if (p === '3M')  return 3;
+  if (p === 'YTD') return TODAY.getMonth() + 1; // Jan=0
+  if (p === '1Y')  return 12;
+  return null; // ALL — calculate dynamically
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let selAccount = 'all';
+let selPeriod  = 'YTD';
+let barInst    = null;
+let lineInst   = null;
+
+function filtered() {
+  const start = periodStart(selPeriod);
+  return TRADES.filter(t => {
+    const matchAcct = selAccount === 'all' || t.acct === selAccount;
+    const matchDate = new Date(t.date) >= start;
+    return matchAcct && matchDate;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════════
+function setAccount(a) {
+  selAccount = a;
+  document.querySelectorAll('[data-account]').forEach(b =>
+    b.classList.toggle('active', b.dataset.account === a));
+  render();
+}
+
+function setPeriod(p) {
+  selPeriod = p;
+  document.querySelectorAll('[data-period]').forEach(b =>
+    b.classList.toggle('active', b.dataset.period === p));
+  render();
+}
+
+function handleSync() {
+  const btn = document.getElementById('syncBtn');
+  btn.textContent = '↻ Syncing…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '↻ Sync Now';
+    btn.disabled = false;
+    const now = new Date();
+    document.getElementById('lastSync').textContent =
+      'Last sync: ' + now.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+  }, 1800);
+}
+
+// ═══════════════════════════════════════════════════════════
+// SUMMARY CARDS
+// ═══════════════════════════════════════════════════════════
+function renderCards(trades) {
+  const closed  = trades.filter(t => t.status !== 'open');
+  const open    = trades.filter(t => t.status === 'open');
+  const totalCF = closed.reduce((s, t) => s + cashFlow(t), 0);
+  const totalOP = open.reduce((s, t) => s + openPremium(t), 0);
+
+  // avg/month
+  let mo = monthsInPeriod(selPeriod);
+  if (!mo) {
+    // ALL: count distinct months with closed trades
+    const keys = new Set(closed.map(t => t.date.slice(0,7)));
+    mo = keys.size || 1;
+  }
+  const avg = Math.round(totalCF / mo);
+
+  // this month
+  const thisMonStart = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+  const thisMo = closed
+    .filter(t => new Date(t.date) >= thisMonStart)
+    .reduce((s, t) => s + cashFlow(t), 0);
+
+  document.getElementById('summaryCards').innerHTML = `
+    <div class="card" style="padding:18px;">
+      <div class="stat-label">Total Cash Flow</div>
+      <div style="font-size:26px;font-weight:800;" class="positive">${fmt(totalCF)}</div>
+      <div style="font-size:11px;color:#334155;margin-top:5px;">${closed.length} closed trades</div>
+    </div>
+    <div class="card" style="padding:18px;">
+      <div class="stat-label">This Month</div>
+      <div style="font-size:26px;font-weight:800;" class="positive">${fmt(thisMo)}</div>
+      <div style="font-size:11px;color:#334155;margin-top:5px;">March 2026</div>
+    </div>
+    <div class="card" style="padding:18px;">
+      <div class="stat-label">Open Premium</div>
+      <div style="font-size:26px;font-weight:800;color:#f59e0b;">${fmt(totalOP)}</div>
+      <div style="font-size:11px;color:#334155;margin-top:5px;">${open.length} open position${open.length!==1?'s':''}</div>
+    </div>
+    <div class="card" style="padding:18px;">
+      <div class="stat-label">Avg / Month</div>
+      <div style="font-size:26px;font-weight:800;color:#60a5fa;">${fmt(avg)}</div>
+      <div style="font-size:11px;color:#334155;margin-top:5px;">Based on ${mo} month${mo!==1?'s':''}</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════════════════════════
+function renderCharts(trades) {
+  const closed = trades.filter(t => t.status !== 'open');
+  const monthly = {};
+  closed.forEach(t => {
+    const key = t.date.slice(0,7);
+    monthly[key] = (monthly[key] || 0) + cashFlow(t);
+  });
+  const keys   = Object.keys(monthly).sort();
+  const labels = keys.map(k => {
+    const [y, m] = k.split('-');
+    return new Date(+y, +m-1).toLocaleDateString('en-US', {month:'short', year:'2-digit'});
+  });
+  const values = keys.map(k => monthly[k]);
+  let running = 0;
+  const cumul = values.map(v => { running += v; return running; });
+
+  Chart.defaults.color        = '#475569';
+  Chart.defaults.borderColor  = '#1a2540';
+
+  if (barInst)  barInst.destroy();
+  if (lineInst) lineInst.destroy();
+
+  barInst = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: values.map(v => v >= 0 ? 'rgba(16,185,129,0.65)' : 'rgba(239,68,68,0.65)'),
+        borderColor:     values.map(v => v >= 0 ? '#10b981' : '#ef4444'),
+        borderWidth: 1,
+        borderRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ' ' + fmt(ctx.raw) }
+      }},
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#1a2540' }, ticks: { font: { size: 10 }, callback: v => '$' + v.toLocaleString() } }
+      }
+    }
+  });
+
+  lineInst = new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: cumul,
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,0.08)',
+        fill: true, tension: 0.35,
+        pointRadius: 3, pointBackgroundColor: '#3b82f6',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ' ' + fmt(ctx.raw) }
+      }},
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { grid: { color: '#1a2540' }, ticks: { font: { size: 10 }, callback: v => '$' + v.toLocaleString() } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// TRADE TABLE
+// ═══════════════════════════════════════════════════════════
+const BADGE = {
+  expired: ['b-green',  'Expired ✓'],
+  closed:  ['b-blue',   'Closed'],
+  rolled:  ['b-yellow', 'Rolled'],
+  open:    ['b-gray',   'Open'],
+};
+
+function renderTable(trades) {
+  const sorted = [...trades].sort((a,b) => new Date(b.date) - new Date(a.date));
+  document.getElementById('tradeCount').textContent = `${sorted.length} trades`;
+
+  const rows = sorted.map(t => {
+    const cf  = cashFlow(t);
+    const op  = openPremium(t);
+    const val = cf !== null
+      ? `<span class="${cf>=0?'positive':'negative'}" style="font-weight:700;">${fmt(cf)}</span>`
+      : `<span style="color:#f59e0b;font-weight:700;">${fmt(op)}</span>`;
+    const [bc, bl] = BADGE[t.status] || BADGE.open;
+    const acct = t.acct === 'individual' ? '···1234' : '···5678';
+    const desc = `${t.strike}C  ${t.exp}`;
+    const label = t.contracts > 1 ? `${t.contracts}x CC` : 'CC';
+    const dateStr = new Date(t.date).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    return `<tr>
+      <td><div style="font-weight:600;font-size:13px;">${dateStr}</div>
+          <div style="font-size:10px;color:#334155;">'26 · ${acct}</div></td>
+      <td><div style="font-weight:700;">${t.sym}</div>
+          <div style="font-size:11px;color:#475569;">${desc}</div></td>
+      <td style="font-size:12px;color:#64748b;">${label}</td>
+      <td><span class="badge ${bc}">${bl}</span></td>
+      <td style="text-align:right;">${val}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tradeBody').innerHTML = rows || `
+    <tr><td colspan="5" style="text-align:center;color:#334155;padding:30px;">
+      No trades in this period
+    </td></tr>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════════════════════════
+function render() {
+  const trades = filtered();
+  renderCards(trades);
+  renderCharts(trades);
+  renderTable(trades);
+}
+
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
