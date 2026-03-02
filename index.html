@@ -14,100 +14,130 @@
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
       min-height: 100vh;
     }
-    .card {
-      background: #111827;
-      border: 1px solid #1e2d45;
-      border-radius: 14px;
-    }
-    /* Time-period pills */
-    .pill {
-      border-radius: 20px;
-      padding: 4px 11px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-    .pill.active          { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
-    .pill:not(.active)    { background: #111827; color: #94a3b8; border-color: #1e2d45; }
-    /* Account segmented control */
-    .seg-btn {
-      padding: 4px 12px; font-size: 12px; font-weight: 500;
-      cursor: pointer; background: transparent;
-      color: #475569; border: 1px solid #1e2d45;
-      transition: all 0.15s; white-space: nowrap;
-    }
-    .seg-btn:first-child             { border-radius: 8px 0 0 8px; }
-    .seg-btn:last-child              { border-radius: 0 8px 8px 0; }
-    .seg-btn:not(:first-child)       { border-left: none; }
-    .seg-btn.active                  { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
-    .seg-btn.active + .seg-btn       { border-left-color: #1d4ed8; }
+    .card { background: #111827; border: 1px solid #1e2d45; border-radius: 14px; }
+    /* Pills */
+    .pill { border-radius: 20px; padding: 4px 11px; font-size: 12px; font-weight: 500;
+            cursor: pointer; border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; }
+    .pill.active       { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+    .pill:not(.active) { background: #111827; color: #94a3b8; border-color: #1e2d45; }
+    /* Segmented control */
+    .seg-btn { padding: 4px 12px; font-size: 12px; font-weight: 500; cursor: pointer;
+               background: transparent; color: #475569; border: 1px solid #1e2d45;
+               transition: all 0.15s; white-space: nowrap; }
+    .seg-btn:first-child      { border-radius: 8px 0 0 8px; }
+    .seg-btn:last-child       { border-radius: 0 8px 8px 0; }
+    .seg-btn:not(:first-child){ border-left: none; }
+    .seg-btn.active           { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+    .seg-btn.active + .seg-btn{ border-left-color: #1d4ed8; }
     /* Chart tabs */
-    .chart-tab {
-      padding: 8px 16px; font-size: 12px; font-weight: 600;
-      cursor: pointer; border: none; background: none;
-      color: #475569; border-bottom: 2px solid transparent;
-      transition: all 0.15s;
-    }
+    .chart-tab { padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer;
+                 border: none; background: none; color: #475569; border-bottom: 2px solid transparent;
+                 transition: all 0.15s; }
     .chart-tab.active { color: #60a5fa; border-bottom-color: #3b82f6; }
-    /* Misc */
-    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; margin-bottom: 4px; }
+    /* Stats */
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+                  color: #475569; margin-bottom: 4px; }
     .positive { color: #10b981; }
     .negative { color: #ef4444; }
+    /* Table */
     table { width: 100%; border-collapse: collapse; }
     th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #475569;
-         padding: 10px 14px; text-align: left; border-bottom: 1px solid #1e2d45; }
-    td { padding: 11px 14px; font-size: 13px; border-bottom: 1px solid #0d1626; vertical-align: middle; }
+         padding: 9px 14px; text-align: left; border-bottom: 1px solid #1e2d45; }
+    td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #0d1626; vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #141e31; }
     .badge { font-size: 11px; padding: 3px 9px; border-radius: 5px; font-weight: 600; display: inline-block; }
     .b-green  { background: #052e1c; color: #10b981; }
     .b-blue   { background: #0c2044; color: #60a5fa; }
     .b-yellow { background: #2d1a02; color: #f59e0b; }
+    .b-red    { background: #2d0a0a; color: #f87171; }
     .b-gray   { background: #1a2336; color: #94a3b8; }
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #1e2d45; border-radius: 4px; }
-    .sync-btn {
-      background: #1d4ed8; color: white; border: none;
-      padding: 6px 14px; border-radius: 8px; font-size: 13px;
-      font-weight: 600; cursor: pointer; transition: background 0.15s;
-    }
+    /* Sync button */
+    .sync-btn { background: #1d4ed8; color: white; border: none; padding: 6px 14px;
+                border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .sync-btn:hover    { background: #2563eb; }
     .sync-btn:disabled { background: #1e3a6e; color: #4b6cb7; cursor: default; }
-    .toggle-icon { transition: transform 0.2s; display: inline-block; }
+    /* Gear button */
+    .gear-btn { background: #111827; color: #64748b; border: 1px solid #1e2d45;
+                padding: 6px 10px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.15s; }
+    .gear-btn:hover { color: #94a3b8; border-color: #2d4060; }
+    /* Toggle switch */
+    .toggle-wrap { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+    .toggle-wrap input { opacity: 0; width: 0; height: 0; }
+    .toggle-track { position: absolute; cursor: pointer; inset: 0; background: #1e2d45;
+                    border-radius: 22px; transition: 0.2s; }
+    .toggle-track:before { content: ''; position: absolute; height: 16px; width: 16px;
+                           left: 3px; bottom: 3px; background: #475569; border-radius: 50%; transition: 0.2s; }
+    input:checked + .toggle-track { background: #1d4ed8; }
+    input:checked + .toggle-track:before { transform: translateX(18px); background: white; }
+    /* Customize drawer */
+    .drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 99;
+                       opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .customize-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 288px;
+                        background: #0c1525; border-left: 1px solid #1e2d45; z-index: 100;
+                        transform: translateX(100%); transition: transform 0.25s ease; overflow-y: auto; }
+    .customize-drawer.open { transform: translateX(0); }
+    /* Symbol bar */
+    .sym-bar-track { background: #1a2540; border-radius: 4px; height: 8px; overflow: hidden; }
+    .sym-bar-fill  { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+    /* Toggle row icon */
+    .toggle-icon { transition: transform 0.2s; display: inline-block; color: #475569; }
     .toggle-icon.closed { transform: rotate(-90deg); }
+    /* Horizontal rule in drawer */
+    .drawer-rule { border: none; border-top: 1px solid #1e2d45; margin: 0; }
   </style>
 </head>
 <body>
 
+<!-- ── CUSTOMIZE BACKDROP ── -->
+<div class="drawer-backdrop" id="backdrop" onclick="closeCustomize()"></div>
+
+<!-- ── CUSTOMIZE DRAWER ── -->
+<div class="customize-drawer" id="customizeDrawer">
+  <div style="padding:18px 20px;border-bottom:1px solid #1e2d45;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-size:15px;font-weight:700;color:#f1f5f9;">Customize Dashboard</div>
+    <button onclick="closeCustomize()" style="background:none;border:none;color:#475569;font-size:18px;cursor:pointer;line-height:1;">✕</button>
+  </div>
+  <div style="padding:12px 0;" id="widgetList"></div>
+  <div style="padding:16px 20px;border-top:1px solid #1e2d45;">
+    <button onclick="resetWidgets()"
+      style="width:100%;padding:8px;background:transparent;border:1px solid #1e2d45;border-radius:8px;
+             color:#475569;font-size:13px;cursor:pointer;transition:all 0.15s;"
+      onmouseover="this.style.borderColor='#2d4060';this.style.color='#94a3b8'"
+      onmouseout="this.style.borderColor='#1e2d45';this.style.color='#475569'">
+      Reset to Defaults
+    </button>
+  </div>
+</div>
+
 <!-- ── HEADER ── -->
 <div style="background:#080d1a;border-bottom:1px solid #1e2d45;padding:10px 20px;position:sticky;top:0;z-index:10;">
-  <div style="max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;">
     <div style="display:flex;align-items:baseline;gap:6px;">
       <span style="font-size:20px;font-weight:800;color:#f1f5f9;">Option</span><span style="font-size:20px;font-weight:800;color:#3b82f6;">Flow</span>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
+    <div style="display:flex;align-items:center;gap:8px;">
       <div style="font-size:10px;color:#334155;" id="lastSync">Never synced</div>
       <button class="sync-btn" onclick="handleSync()" id="syncBtn">↻ Sync</button>
+      <button class="gear-btn" onclick="openCustomize()" title="Customize dashboard">⚙</button>
     </div>
   </div>
 </div>
 
 <!-- ── MAIN ── -->
-<div style="max-width:860px;margin:0 auto;padding:14px 16px 40px;">
+<div style="max-width:900px;margin:0 auto;padding:14px 16px 40px;">
 
-  <!-- ── Combined Filter Row ── -->
+  <!-- Filter Row -->
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-    <!-- Account segmented control -->
     <div style="display:flex;" id="accountFilters">
       <button class="seg-btn active" onclick="setAccount('all')"        data-account="all">All</button>
       <button class="seg-btn"        onclick="setAccount('individual')" data-account="individual">···1234</button>
       <button class="seg-btn"        onclick="setAccount('ira')"        data-account="ira">IRA ···5678</button>
     </div>
-    <!-- Time period pills -->
     <div style="display:flex;gap:5px;" id="timeFilters">
       <button class="pill"        onclick="setPeriod('1M')"  data-period="1M">1M</button>
       <button class="pill"        onclick="setPeriod('3M')"  data-period="3M">3M</button>
@@ -117,11 +147,20 @@
     </div>
   </div>
 
-  <!-- ── Summary Cards ── -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="summaryCards"></div>
+  <!-- Widget: key-stats -->
+  <div id="w-key-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="summaryCards"></div>
 
-  <!-- ── Tabbed Chart Card ── -->
-  <div class="card" style="margin-bottom:18px;">
+  <!-- Widget: perf-cards -->
+  <div id="w-perf-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="perfCards"></div>
+
+  <!-- Widget: by-symbol -->
+  <div id="w-by-symbol" class="card" style="padding:18px;margin-bottom:16px;">
+    <div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;">Income by Symbol</div>
+    <div id="symbolBars"></div>
+  </div>
+
+  <!-- Widget: charts -->
+  <div id="w-charts" class="card" style="margin-bottom:16px;">
     <div style="display:flex;border-bottom:1px solid #1e2d45;padding:0 14px;">
       <button class="chart-tab active" id="tabBar"  onclick="setChartTab('bar')">Monthly Cash Flow</button>
       <button class="chart-tab"        id="tabLine" onclick="setChartTab('line')">Cumulative</button>
@@ -132,8 +171,31 @@
     </div>
   </div>
 
-  <!-- ── Trade Log (collapsible) ── -->
-  <div class="card">
+  <!-- Widget: open-pos -->
+  <div id="w-open-pos" class="card" style="margin-bottom:16px;">
+    <div style="padding:13px 18px;border-bottom:1px solid #1e2d45;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:14px;font-weight:700;color:#cbd5e1;">Open Positions</div>
+      <div style="font-size:12px;color:#475569;" id="openCount"></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Type</th>
+            <th>Strike / Exp</th>
+            <th>Acct</th>
+            <th style="text-align:right;">DTE</th>
+            <th style="text-align:right;">At Risk</th>
+          </tr>
+        </thead>
+        <tbody id="openBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Widget: trade-log -->
+  <div id="w-trade-log" class="card">
     <div style="padding:13px 18px;border-bottom:1px solid #1e2d45;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;"
          onclick="toggleTrades()">
       <div style="font-size:14px;font-weight:700;color:#cbd5e1;">Trade Log</div>
@@ -148,7 +210,9 @@
           <thead>
             <tr>
               <th>Opened</th>
-              <th>Position</th>
+              <th>Symbol</th>
+              <th>Type</th>
+              <th>Strike / Exp</th>
               <th>Acct</th>
               <th>Status</th>
               <th style="text-align:right;">Cash Flow</th>
@@ -167,66 +231,221 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// MOCK DATA
+// DATA — full year of trades
+// strategy: CC = covered call, CSP = cash-secured put
 // ═══════════════════════════════════════════════════════════
-const TRADES = [
-  // ── Individual ···1234 ─────────────────────────────────
-  {id:1,  acct:'individual', sym:'AAPL', strike:180, exp:'03/21', contracts:1, sto:3.20, btc:0.00, status:'expired', date:'2025-03-07'},
-  {id:2,  acct:'individual', sym:'SPY',  strike:510, exp:'03/21', contracts:1, sto:2.45, btc:0.15, status:'closed',  date:'2025-03-10'},
-  {id:3,  acct:'individual', sym:'AAPL', strike:185, exp:'04/17', contracts:1, sto:2.80, btc:2.10, status:'closed',  date:'2025-04-01'},
-  {id:4,  acct:'individual', sym:'SPY',  strike:515, exp:'04/17', contracts:1, sto:3.10, btc:0.00, status:'expired', date:'2025-04-04'},
-  {id:5,  acct:'individual', sym:'NVDA', strike:900, exp:'04/25', contracts:1, sto:11.20,btc:9.50, status:'rolled',  date:'2025-04-14'},
-  {id:6,  acct:'individual', sym:'AAPL', strike:185, exp:'05/16', contracts:1, sto:2.95, btc:0.00, status:'expired', date:'2025-05-02'},
-  {id:7,  acct:'individual', sym:'SPY',  strike:520, exp:'05/16', contracts:1, sto:2.65, btc:0.25, status:'closed',  date:'2025-05-05'},
-  {id:8,  acct:'individual', sym:'AAPL', strike:190, exp:'06/20', contracts:1, sto:3.50, btc:0.00, status:'expired', date:'2025-06-06'},
-  {id:9,  acct:'individual', sym:'SPY',  strike:525, exp:'06/20', contracts:1, sto:3.20, btc:1.80, status:'closed',  date:'2025-06-09'},
-  {id:10, acct:'individual', sym:'AAPL', strike:195, exp:'07/18', contracts:1, sto:2.90, btc:0.00, status:'expired', date:'2025-07-07'},
-  {id:11, acct:'individual', sym:'SPY',  strike:530, exp:'07/18', contracts:1, sto:2.75, btc:0.10, status:'closed',  date:'2025-07-07'},
-  {id:12, acct:'individual', sym:'AAPL', strike:200, exp:'08/15', contracts:1, sto:3.80, btc:1.20, status:'closed',  date:'2025-08-04'},
-  {id:13, acct:'individual', sym:'SPY',  strike:545, exp:'08/22', contracts:1, sto:2.90, btc:0.00, status:'expired', date:'2025-08-08'},
-  {id:14, acct:'individual', sym:'AAPL', strike:205, exp:'09/19', contracts:1, sto:3.10, btc:0.00, status:'expired', date:'2025-09-05'},
-  {id:15, acct:'individual', sym:'SPY',  strike:550, exp:'09/19', contracts:1, sto:3.40, btc:0.30, status:'closed',  date:'2025-09-08'},
-  {id:16, acct:'individual', sym:'AAPL', strike:210, exp:'10/17', contracts:1, sto:2.70, btc:0.00, status:'expired', date:'2025-10-06'},
-  {id:17, acct:'individual', sym:'SPY',  strike:555, exp:'10/17', contracts:1, sto:3.00, btc:2.20, status:'closed',  date:'2025-10-06'},
-  {id:18, acct:'individual', sym:'AAPL', strike:215, exp:'11/21', contracts:1, sto:3.20, btc:0.00, status:'expired', date:'2025-11-07'},
-  {id:19, acct:'individual', sym:'SPY',  strike:580, exp:'11/21', contracts:1, sto:3.50, btc:0.40, status:'closed',  date:'2025-11-10'},
-  {id:20, acct:'individual', sym:'AAPL', strike:220, exp:'12/19', contracts:1, sto:2.90, btc:0.00, status:'expired', date:'2025-12-05'},
-  {id:21, acct:'individual', sym:'SPY',  strike:585, exp:'12/19', contracts:1, sto:3.10, btc:0.90, status:'closed',  date:'2025-12-09'},
-  {id:22, acct:'individual', sym:'AAPL', strike:225, exp:'01/16', contracts:1, sto:3.40, btc:0.00, status:'expired', date:'2026-01-06'},
-  {id:23, acct:'individual', sym:'SPY',  strike:590, exp:'01/16', contracts:1, sto:2.80, btc:0.20, status:'closed',  date:'2026-01-06'},
-  {id:24, acct:'individual', sym:'AAPL', strike:230, exp:'02/21', contracts:1, sto:3.00, btc:0.00, status:'expired', date:'2026-02-07'},
-  {id:25, acct:'individual', sym:'SPY',  strike:595, exp:'02/21', contracts:1, sto:2.50, btc:0.15, status:'closed',  date:'2026-02-10'},
-  {id:26, acct:'individual', sym:'AAPL', strike:235, exp:'03/21', contracts:1, sto:3.20, btc:0.00, status:'open',    date:'2026-03-03'},
-  {id:27, acct:'individual', sym:'SPY',  strike:600, exp:'03/21', contracts:1, sto:2.70, btc:0.00, status:'open',    date:'2026-03-03'},
+function buildTrades() {
+  const out = [];
+  let id = 1;
+  const add = (acct, sym, strategy, strike, exp, contracts, sto, btc, status, date) =>
+    out.push({ id: id++, acct, sym, strategy, strike, exp, contracts, sto, btc, status, date });
 
-  // ── Roth IRA ···5678 ───────────────────────────────────
-  {id:28, acct:'ira', sym:'QQQ',  strike:450, exp:'03/21', contracts:2, sto:4.50, btc:0.00, status:'expired', date:'2025-03-07'},
-  {id:29, acct:'ira', sym:'MSFT', strike:420, exp:'03/21', contracts:1, sto:3.20, btc:0.20, status:'closed',  date:'2025-03-10'},
-  {id:30, acct:'ira', sym:'QQQ',  strike:455, exp:'04/17', contracts:2, sto:4.80, btc:0.00, status:'expired', date:'2025-04-04'},
-  {id:31, acct:'ira', sym:'MSFT', strike:425, exp:'04/17', contracts:1, sto:2.90, btc:1.50, status:'closed',  date:'2025-04-04'},
-  {id:32, acct:'ira', sym:'QQQ',  strike:460, exp:'05/16', contracts:2, sto:5.10, btc:0.00, status:'expired', date:'2025-05-02'},
-  {id:33, acct:'ira', sym:'MSFT', strike:430, exp:'05/16', contracts:1, sto:3.40, btc:0.30, status:'closed',  date:'2025-05-05'},
-  {id:34, acct:'ira', sym:'QQQ',  strike:465, exp:'06/20', contracts:2, sto:4.70, btc:1.20, status:'closed',  date:'2025-06-06'},
-  {id:35, acct:'ira', sym:'MSFT', strike:435, exp:'06/20', contracts:1, sto:3.60, btc:0.00, status:'expired', date:'2025-06-09'},
-  {id:36, acct:'ira', sym:'QQQ',  strike:470, exp:'07/18', contracts:2, sto:5.20, btc:0.00, status:'expired', date:'2025-07-07'},
-  {id:37, acct:'ira', sym:'MSFT', strike:440, exp:'07/18', contracts:1, sto:3.10, btc:0.40, status:'closed',  date:'2025-07-07'},
-  {id:38, acct:'ira', sym:'QQQ',  strike:480, exp:'08/22', contracts:2, sto:4.90, btc:0.00, status:'expired', date:'2025-08-08'},
-  {id:39, acct:'ira', sym:'MSFT', strike:445, exp:'08/15', contracts:1, sto:3.80, btc:1.60, status:'rolled',  date:'2025-08-04'},
-  {id:40, acct:'ira', sym:'QQQ',  strike:485, exp:'09/19', contracts:2, sto:5.40, btc:0.00, status:'expired', date:'2025-09-05'},
-  {id:41, acct:'ira', sym:'MSFT', strike:450, exp:'09/19', contracts:1, sto:3.20, btc:0.10, status:'closed',  date:'2025-09-08'},
-  {id:42, acct:'ira', sym:'QQQ',  strike:490, exp:'10/17', contracts:2, sto:4.60, btc:2.10, status:'closed',  date:'2025-10-06'},
-  {id:43, acct:'ira', sym:'MSFT', strike:455, exp:'10/17', contracts:1, sto:2.80, btc:0.00, status:'expired', date:'2025-10-06'},
-  {id:44, acct:'ira', sym:'QQQ',  strike:500, exp:'11/21', contracts:2, sto:5.80, btc:0.00, status:'expired', date:'2025-11-07'},
-  {id:45, acct:'ira', sym:'MSFT', strike:460, exp:'11/21', contracts:1, sto:3.50, btc:0.60, status:'closed',  date:'2025-11-10'},
-  {id:46, acct:'ira', sym:'QQQ',  strike:510, exp:'12/19', contracts:2, sto:5.20, btc:0.00, status:'expired', date:'2025-12-05'},
-  {id:47, acct:'ira', sym:'MSFT', strike:465, exp:'12/19', contracts:1, sto:3.40, btc:1.20, status:'closed',  date:'2025-12-09'},
-  {id:48, acct:'ira', sym:'QQQ',  strike:515, exp:'01/16', contracts:2, sto:5.60, btc:0.00, status:'expired', date:'2026-01-06'},
-  {id:49, acct:'ira', sym:'MSFT', strike:470, exp:'01/16', contracts:1, sto:3.10, btc:0.20, status:'closed',  date:'2026-01-06'},
-  {id:50, acct:'ira', sym:'QQQ',  strike:520, exp:'02/21', contracts:2, sto:5.30, btc:0.00, status:'expired', date:'2026-02-07'},
-  {id:51, acct:'ira', sym:'MSFT', strike:475, exp:'02/21', contracts:1, sto:2.90, btc:0.10, status:'closed',  date:'2026-02-10'},
-  {id:52, acct:'ira', sym:'QQQ',  strike:525, exp:'03/21', contracts:2, sto:5.00, btc:0.00, status:'open',    date:'2026-03-03'},
-  {id:53, acct:'ira', sym:'MSFT', strike:480, exp:'03/21', contracts:1, sto:3.20, btc:0.00, status:'open',    date:'2026-03-03'},
+  // Individual ···1234 — AAPL CC, SPY CC, NVDA CC, TSLA CSP
+  const ind = [
+    // Mar 2025
+    ['AAPL','CC', 180,'03/21',1, 3.20,0.00,'expired', '2025-03-03'],
+    ['SPY', 'CC', 510,'03/21',1, 2.80,0.15,'closed',  '2025-03-03'],
+    ['NVDA','CC', 880,'03/28',1,14.50,0.00,'expired', '2025-03-03'],
+    ['TSLA','CSP',250,'03/21',1, 6.20,0.00,'expired', '2025-03-03'],
+    // Apr 2025
+    ['AAPL','CC', 185,'04/17',1, 2.95,1.80,'closed',  '2025-04-01'],
+    ['SPY', 'CC', 515,'04/17',1, 3.10,0.00,'expired', '2025-04-01'],
+    ['NVDA','CC', 900,'04/25',1,16.80,11.20,'rolled',  '2025-04-01'],
+    ['TSLA','CSP',255,'04/17',1, 7.50,0.00,'expired', '2025-04-07'],
+    // May 2025
+    ['AAPL','CC', 185,'05/16',1, 3.40,0.00,'expired', '2025-05-01'],
+    ['SPY', 'CC', 520,'05/16',1, 2.65,0.25,'closed',  '2025-05-01'],
+    ['NVDA','CC', 920,'05/23',1,13.20,0.00,'expired', '2025-05-05'],
+    ['TSLA','CSP',260,'05/16',1, 5.80,0.00,'expired', '2025-05-05'],
+    // Jun 2025
+    ['AAPL','CC', 190,'06/20',1, 3.60,0.00,'expired', '2025-06-02'],
+    ['SPY', 'CC', 525,'06/20',1, 3.20,1.80,'closed',  '2025-06-02'],
+    ['NVDA','CC', 940,'06/20',1,15.50,0.00,'expired', '2025-06-02'],
+    ['TSLA','CSP',265,'06/20',1, 8.20,9.50,'closed',  '2025-06-09'], // loss
+    // Jul 2025
+    ['AAPL','CC', 195,'07/18',1, 2.90,0.00,'expired', '2025-07-01'],
+    ['SPY', 'CC', 535,'07/18',1, 2.75,0.10,'closed',  '2025-07-01'],
+    ['NVDA','CC', 960,'07/25',1,17.30,0.00,'expired', '2025-07-07'],
+    ['TSLA','CSP',270,'07/18',1, 6.50,0.00,'expired', '2025-07-07'],
+    // Aug 2025
+    ['AAPL','CC', 200,'08/15',1, 3.80,1.20,'closed',  '2025-08-01'],
+    ['SPY', 'CC', 545,'08/22',1, 2.90,0.00,'expired', '2025-08-01'],
+    ['NVDA','CC', 980,'08/22',1,18.50,0.00,'expired', '2025-08-04'],
+    ['TSLA','CSP',285,'08/15',1, 7.80,6.20,'closed',  '2025-08-04'],
+    // Sep 2025
+    ['AAPL','CC', 205,'09/19',1, 3.10,0.00,'expired', '2025-09-02'],
+    ['SPY', 'CC', 550,'09/19',1, 3.40,0.30,'closed',  '2025-09-02'],
+    ['NVDA','CC',1000,'09/19',1,16.20,0.00,'expired', '2025-09-02'],
+    ['TSLA','CSP',290,'09/26',1, 6.90,0.00,'expired', '2025-09-08'],
+    // Oct 2025
+    ['AAPL','CC', 210,'10/17',1, 2.70,0.00,'expired', '2025-10-01'],
+    ['SPY', 'CC', 555,'10/17',1, 3.00,2.20,'closed',  '2025-10-01'],
+    ['NVDA','CC',1020,'10/24',1,19.50,0.00,'expired', '2025-10-06'],
+    ['TSLA','CSP',300,'10/17',1, 8.20,0.00,'expired', '2025-10-06'],
+    // Nov 2025
+    ['AAPL','CC', 215,'11/21',1, 3.20,0.00,'expired', '2025-11-03'],
+    ['SPY', 'CC', 575,'11/21',1, 3.50,0.40,'closed',  '2025-11-03'],
+    ['NVDA','CC',1050,'11/21',1,21.00,0.00,'expired', '2025-11-03'],
+    ['TSLA','CSP',310,'11/21',1, 9.50,11.20,'closed', '2025-11-10'], // loss
+    // Dec 2025
+    ['AAPL','CC', 220,'12/19',1, 2.90,0.00,'expired', '2025-12-01'],
+    ['SPY', 'CC', 580,'12/19',1, 3.10,0.90,'closed',  '2025-12-01'],
+    ['NVDA','CC',1080,'12/19',1,18.80,0.00,'expired', '2025-12-01'],
+    ['TSLA','CSP',315,'12/19',1, 7.60,0.00,'expired', '2025-12-08'],
+    // Jan 2026
+    ['AAPL','CC', 225,'01/16',1, 3.40,0.00,'expired', '2026-01-05'],
+    ['SPY', 'CC', 590,'01/16',1, 2.80,0.20,'closed',  '2026-01-05'],
+    ['NVDA','CC',1100,'01/16',1,20.50,0.00,'expired', '2026-01-05'],
+    ['TSLA','CSP',330,'01/23',1, 8.90,0.00,'expired', '2026-01-12'],
+    // Feb 2026
+    ['AAPL','CC', 230,'02/21',1, 3.00,0.00,'expired', '2026-02-03'],
+    ['SPY', 'CC', 595,'02/21',1, 2.50,0.15,'closed',  '2026-02-03'],
+    ['NVDA','CC',1120,'02/21',1,17.80,0.00,'expired', '2026-02-03'],
+    ['TSLA','CSP',345,'02/21',1, 9.20,7.10,'closed',  '2026-02-10'],
+    // Mar 2026 — open
+    ['AAPL','CC', 235,'03/21',1, 3.20,0.00,'open',    '2026-03-03'],
+    ['SPY', 'CC', 600,'03/21',1, 2.70,0.00,'open',    '2026-03-03'],
+    ['NVDA','CC',1140,'03/21',1,19.50,0.00,'open',    '2026-03-03'],
+    ['TSLA','CSP',360,'03/21',1, 8.80,0.00,'open',    '2026-03-03'],
+  ];
+  ind.forEach(([sym,strat,strike,exp,contracts,sto,btc,status,date]) =>
+    add('individual', sym, strat, strike, exp, contracts, sto, btc, status, date));
+
+  // IRA ···5678 — QQQ CC, MSFT CC, AMZN CSP
+  const ira = [
+    // Mar 2025
+    ['QQQ', 'CC', 450,'03/21',2, 4.50,0.00,'expired', '2025-03-03'],
+    ['MSFT','CC', 420,'03/21',1, 3.20,0.20,'closed',  '2025-03-03'],
+    ['AMZN','CSP',205,'03/21',1, 5.10,0.00,'expired', '2025-03-03'],
+    // Apr 2025
+    ['QQQ', 'CC', 455,'04/17',2, 4.80,0.00,'expired', '2025-04-01'],
+    ['MSFT','CC', 425,'04/17',1, 2.90,1.50,'closed',  '2025-04-01'],
+    ['AMZN','CSP',210,'04/25',1, 5.40,0.00,'expired', '2025-04-07'],
+    // May 2025
+    ['QQQ', 'CC', 460,'05/16',2, 5.10,0.00,'expired', '2025-05-01'],
+    ['MSFT','CC', 430,'05/16',1, 3.40,0.30,'closed',  '2025-05-01'],
+    ['AMZN','CSP',218,'05/23',1, 4.80,0.00,'expired', '2025-05-05'],
+    // Jun 2025
+    ['QQQ', 'CC', 465,'06/20',2, 4.70,1.20,'closed',  '2025-06-02'],
+    ['MSFT','CC', 435,'06/20',1, 3.60,0.00,'expired', '2025-06-02'],
+    ['AMZN','CSP',220,'06/20',1, 5.20,5.80,'closed',  '2025-06-09'], // loss
+    // Jul 2025
+    ['QQQ', 'CC', 475,'07/18',2, 5.20,0.00,'expired', '2025-07-01'],
+    ['MSFT','CC', 440,'07/18',1, 3.10,0.40,'closed',  '2025-07-01'],
+    ['AMZN','CSP',228,'07/25',1, 4.90,0.00,'expired', '2025-07-07'],
+    // Aug 2025
+    ['QQQ', 'CC', 480,'08/22',2, 4.90,0.00,'expired', '2025-08-01'],
+    ['MSFT','CC', 445,'08/15',1, 3.80,1.60,'rolled',  '2025-08-01'],
+    ['AMZN','CSP',235,'08/22',1, 5.10,0.00,'expired', '2025-08-04'],
+    // Sep 2025
+    ['QQQ', 'CC', 485,'09/19',2, 5.40,0.00,'expired', '2025-09-02'],
+    ['MSFT','CC', 450,'09/19',1, 3.20,0.10,'closed',  '2025-09-02'],
+    ['AMZN','CSP',242,'09/26',1, 4.70,0.00,'expired', '2025-09-08'],
+    // Oct 2025
+    ['QQQ', 'CC', 490,'10/17',2, 4.60,2.10,'closed',  '2025-10-01'],
+    ['MSFT','CC', 455,'10/17',1, 2.80,0.00,'expired', '2025-10-01'],
+    ['AMZN','CSP',250,'10/24',1, 5.60,0.00,'expired', '2025-10-06'],
+    // Nov 2025
+    ['QQQ', 'CC', 500,'11/21',2, 5.80,0.00,'expired', '2025-11-03'],
+    ['MSFT','CC', 460,'11/21',1, 3.50,0.60,'closed',  '2025-11-03'],
+    ['AMZN','CSP',260,'11/28',1, 4.90,0.00,'expired', '2025-11-10'],
+    // Dec 2025
+    ['QQQ', 'CC', 510,'12/19',2, 5.20,0.00,'expired', '2025-12-01'],
+    ['MSFT','CC', 465,'12/19',1, 3.40,1.20,'closed',  '2025-12-01'],
+    ['AMZN','CSP',268,'12/26',1, 5.30,0.00,'expired', '2025-12-08'],
+    // Jan 2026
+    ['QQQ', 'CC', 515,'01/16',2, 5.60,0.00,'expired', '2026-01-05'],
+    ['MSFT','CC', 470,'01/16',1, 3.10,0.20,'closed',  '2026-01-05'],
+    ['AMZN','CSP',275,'01/23',1, 5.10,0.00,'expired', '2026-01-12'],
+    // Feb 2026
+    ['QQQ', 'CC', 520,'02/21',2, 5.30,0.00,'expired', '2026-02-03'],
+    ['MSFT','CC', 475,'02/21',1, 2.90,0.10,'closed',  '2026-02-03'],
+    ['AMZN','CSP',282,'02/21',1, 4.80,0.00,'expired', '2026-02-10'],
+    // Mar 2026 — open
+    ['QQQ', 'CC', 525,'03/21',2, 5.00,0.00,'open',    '2026-03-03'],
+    ['MSFT','CC', 480,'03/21',1, 3.20,0.00,'open',    '2026-03-03'],
+    ['AMZN','CSP',290,'03/21',1, 4.60,0.00,'open',    '2026-03-03'],
+  ];
+  ira.forEach(([sym,strat,strike,exp,contracts,sto,btc,status,date]) =>
+    add('ira', sym, strat, strike, exp, contracts, sto, btc, status, date));
+
+  return out;
+}
+
+const TRADES = buildTrades();
+
+// ═══════════════════════════════════════════════════════════
+// WIDGET DEFINITIONS
+// ═══════════════════════════════════════════════════════════
+const WIDGET_DEFS = [
+  { id: 'key-stats',  label: 'Key Stats',         desc: 'Total income, this month, open premium, avg/mo' },
+  { id: 'perf-cards', label: 'Performance',        desc: 'Win rate, premium capture, best month, profit factor' },
+  { id: 'by-symbol',  label: 'Income by Symbol',   desc: 'P&L breakdown per underlying' },
+  { id: 'charts',     label: 'Charts',             desc: 'Monthly cash flow & cumulative income' },
+  { id: 'open-pos',   label: 'Open Positions',     desc: 'Live positions with DTE & at-risk premium' },
+  { id: 'trade-log',  label: 'Trade Log',          desc: 'Full trade history' },
 ];
+const DEFAULT_VISIBLE = new Set(WIDGET_DEFS.map(w => w.id));
+
+let widgetPrefs = loadPrefs();
+
+function loadPrefs() {
+  try {
+    const s = localStorage.getItem('of_widgets');
+    if (s) return new Set(JSON.parse(s));
+  } catch {}
+  return new Set(DEFAULT_VISIBLE);
+}
+function savePrefs() {
+  localStorage.setItem('of_widgets', JSON.stringify([...widgetPrefs]));
+}
+function applyPrefs() {
+  WIDGET_DEFS.forEach(w => {
+    const el = document.getElementById('w-' + w.id);
+    if (el) el.style.display = widgetPrefs.has(w.id) ? '' : 'none';
+  });
+}
+function resetWidgets() {
+  widgetPrefs = new Set(DEFAULT_VISIBLE);
+  savePrefs();
+  buildWidgetList();
+  applyPrefs();
+  render();
+}
+
+function buildWidgetList() {
+  document.getElementById('widgetList').innerHTML = WIDGET_DEFS.map(w => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 20px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:2px;">${w.label}</div>
+        <div style="font-size:11px;color:#475569;">${w.desc}</div>
+      </div>
+      <label class="toggle-wrap" style="margin-left:14px;">
+        <input type="checkbox" ${widgetPrefs.has(w.id) ? 'checked' : ''}
+               onchange="toggleWidget('${w.id}', this.checked)" />
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <hr class="drawer-rule" />
+  `).join('');
+}
+
+function toggleWidget(id, on) {
+  if (on) widgetPrefs.add(id); else widgetPrefs.delete(id);
+  savePrefs();
+  applyPrefs();
+  if (on) render(); // re-render in case it needs chart init
+}
+
+function openCustomize()  {
+  buildWidgetList();
+  document.getElementById('customizeDrawer').classList.add('open');
+  document.getElementById('backdrop').classList.add('open');
+}
+function closeCustomize() {
+  document.getElementById('customizeDrawer').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('open');
+}
 
 // ═══════════════════════════════════════════════════════════
 // HELPERS
@@ -236,8 +455,8 @@ const TODAY = new Date('2026-03-02');
 function cashFlow(t)    { return t.status !== 'open' ? (t.sto - t.btc) * t.contracts * 100 : null; }
 function openPremium(t) { return t.status === 'open'  ? t.sto * t.contracts * 100 : null; }
 
-function fmt(n) {
-  const abs = Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+function fmt(n, decimals = 0) {
+  const abs = Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   return n < 0 ? `-$${abs}` : `$${abs}`;
 }
 
@@ -258,15 +477,24 @@ function monthsInPeriod(p) {
   return null;
 }
 
+function calcDTE(expStr) {
+  // 'MM/DD' → assume current or next cycle year
+  const [m, d] = expStr.split('/').map(Number);
+  let yr = TODAY.getFullYear();
+  const exp = new Date(yr, m - 1, d);
+  if (exp < TODAY) exp.setFullYear(yr + 1);
+  return Math.ceil((exp - TODAY) / 86400000);
+}
+
 // ═══════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════
-let selAccount   = 'all';
-let selPeriod    = 'YTD';
-let activeChart  = 'bar';
-let tradesOpen   = true;
-let barInst      = null;
-let lineInst     = null;
+let selAccount  = 'all';
+let selPeriod   = 'YTD';
+let activeChart = 'bar';
+let tradesOpen  = true;
+let barInst     = null;
+let lineInst    = null;
 
 function filtered() {
   const start = periodStart(selPeriod);
@@ -286,14 +514,12 @@ function setAccount(a) {
     b.classList.toggle('active', b.dataset.account === a));
   render();
 }
-
 function setPeriod(p) {
   selPeriod = p;
   document.querySelectorAll('[data-period]').forEach(b =>
     b.classList.toggle('active', b.dataset.period === p));
   render();
 }
-
 function setChartTab(tab) {
   activeChart = tab;
   document.getElementById('barPane').style.display  = tab === 'bar'  ? '' : 'none';
@@ -301,48 +527,39 @@ function setChartTab(tab) {
   document.getElementById('tabBar').classList.toggle('active',  tab === 'bar');
   document.getElementById('tabLine').classList.toggle('active', tab === 'line');
 }
-
 function toggleTrades() {
   tradesOpen = !tradesOpen;
   document.getElementById('tradePanel').style.display = tradesOpen ? '' : 'none';
   document.getElementById('tradeToggle').classList.toggle('closed', !tradesOpen);
 }
-
 function handleSync() {
   const btn = document.getElementById('syncBtn');
-  btn.textContent = '↻ Syncing…';
-  btn.disabled = true;
+  btn.textContent = '↻ Syncing…'; btn.disabled = true;
   setTimeout(() => {
-    btn.textContent = '↻ Sync';
-    btn.disabled = false;
-    const now = new Date();
+    btn.textContent = '↻ Sync'; btn.disabled = false;
     document.getElementById('lastSync').textContent =
-      'Synced ' + now.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+      'Synced ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   }, 1800);
 }
 
 // ═══════════════════════════════════════════════════════════
-// SUMMARY CARDS
+// WIDGET: KEY STATS
 // ═══════════════════════════════════════════════════════════
-function renderCards(trades) {
+function renderKeyStats(trades) {
   const closed  = trades.filter(t => t.status !== 'open');
   const open    = trades.filter(t => t.status === 'open');
   const totalCF = closed.reduce((s, t) => s + cashFlow(t), 0);
   const totalOP = open.reduce((s, t) => s + openPremium(t), 0);
 
   let mo = monthsInPeriod(selPeriod);
-  if (!mo) {
-    const keys = new Set(closed.map(t => t.date.slice(0,7)));
-    mo = keys.size || 1;
-  }
+  if (!mo) { const keys = new Set(closed.map(t => t.date.slice(0,7))); mo = keys.size || 1; }
   const avg = Math.round(totalCF / mo);
 
   const thisMonStart = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
-  const thisMo = closed
-    .filter(t => new Date(t.date) >= thisMonStart)
-    .reduce((s, t) => s + cashFlow(t), 0);
+  const thisMo = closed.filter(t => new Date(t.date) >= thisMonStart)
+                       .reduce((s, t) => s + cashFlow(t), 0);
 
-  document.getElementById('summaryCards').innerHTML = `
+  document.getElementById('w-key-stats').innerHTML = `
     <div class="card" style="padding:16px;">
       <div class="stat-label">Total Cash Flow</div>
       <div style="font-size:26px;font-weight:800;" class="positive">${fmt(totalCF)}</div>
@@ -356,29 +573,124 @@ function renderCards(trades) {
     <div class="card" style="padding:16px;">
       <div class="stat-label">Open Premium</div>
       <div style="font-size:26px;font-weight:800;color:#f59e0b;">${fmt(totalOP)}</div>
-      <div style="font-size:11px;color:#334155;margin-top:4px;">${open.length} open position${open.length!==1?'s':''}</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">${open.length} position${open.length!==1?'s':''}</div>
     </div>
     <div class="card" style="padding:16px;">
       <div class="stat-label">Avg / Month</div>
       <div style="font-size:26px;font-weight:800;color:#60a5fa;">${fmt(avg)}</div>
-      <div style="font-size:11px;color:#334155;margin-top:4px;">Based on ${mo} month${mo!==1?'s':''}</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">Over ${mo} month${mo!==1?'s':''}</div>
     </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════
-// CHARTS
+// WIDGET: PERFORMANCE CARDS
+// ═══════════════════════════════════════════════════════════
+function renderPerfCards(trades) {
+  const closed = trades.filter(t => t.status !== 'open');
+  if (!closed.length) {
+    document.getElementById('w-perf-cards').innerHTML =
+      `<div class="card" style="padding:16px;grid-column:1/-1;text-align:center;color:#334155;">No closed trades in period</div>`;
+    return;
+  }
+
+  // Win rate: expired or closed with profit
+  const wins   = closed.filter(t => t.status === 'expired' || cashFlow(t) > 0);
+  const losses = closed.filter(t => cashFlow(t) <= 0 && t.status !== 'rolled');
+  const winRate = Math.round((wins.length / closed.length) * 100);
+
+  // Premium capture: avg (STO - BTC) / STO
+  const captures = closed
+    .filter(t => t.sto > 0)
+    .map(t => (t.sto - t.btc) / t.sto * 100);
+  const avgCapture = Math.round(captures.reduce((s, v) => s + v, 0) / captures.length);
+
+  // Best month
+  const monthly = {};
+  closed.forEach(t => {
+    const k = t.date.slice(0, 7);
+    monthly[k] = (monthly[k] || 0) + cashFlow(t);
+  });
+  const bestMo = Math.max(...Object.values(monthly));
+  const bestMoKey = Object.keys(monthly).find(k => monthly[k] === bestMo);
+  const bestLabel = bestMoKey
+    ? new Date(bestMoKey + '-01').toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+    : '—';
+
+  // Profit factor: gross wins / |gross losses|
+  const grossWin  = wins.reduce((s, t) => s + Math.max(cashFlow(t), 0), 0);
+  const grossLoss = Math.abs(losses.reduce((s, t) => s + Math.min(cashFlow(t), 0), 0));
+  const pf = grossLoss > 0 ? (grossWin / grossLoss).toFixed(1) : '∞';
+
+  document.getElementById('w-perf-cards').innerHTML = `
+    <div class="card" style="padding:16px;">
+      <div class="stat-label">Win Rate</div>
+      <div style="font-size:26px;font-weight:800;color:${winRate>=70?'#10b981':'#f59e0b'};">${winRate}%</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">${wins.length}W · ${losses.length}L · ${closed.length - wins.length - losses.length} rolled</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div class="stat-label">Avg Capture</div>
+      <div style="font-size:26px;font-weight:800;color:#a78bfa;">${avgCapture}%</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">Of premium collected</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div class="stat-label">Best Month</div>
+      <div style="font-size:26px;font-weight:800;" class="positive">${fmt(bestMo)}</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">${bestLabel}</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div class="stat-label">Profit Factor</div>
+      <div style="font-size:26px;font-weight:800;color:#f97316;">${pf}</div>
+      <div style="font-size:11px;color:#334155;margin-top:4px;">Gross win / gross loss</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// WIDGET: INCOME BY SYMBOL
+// ═══════════════════════════════════════════════════════════
+function renderBySymbol(trades) {
+  const closed = trades.filter(t => t.status !== 'open');
+  const bySymbol = {};
+  closed.forEach(t => {
+    bySymbol[t.sym] = (bySymbol[t.sym] || 0) + cashFlow(t);
+  });
+  const sorted = Object.entries(bySymbol).sort((a, b) => b[1] - a[1]);
+  if (!sorted.length) {
+    document.getElementById('symbolBars').innerHTML =
+      '<div style="color:#334155;font-size:12px;">No data in period</div>';
+    return;
+  }
+  const max = Math.abs(sorted[0][1]);
+  document.getElementById('symbolBars').innerHTML = sorted.map(([sym, val]) => {
+    const pct  = Math.round(Math.abs(val) / max * 100);
+    const pos  = val >= 0;
+    const color = pos ? '#10b981' : '#ef4444';
+    return `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:46px;font-size:12px;font-weight:700;color:#94a3b8;flex-shrink:0;">${sym}</div>
+        <div style="flex:1;">
+          <div class="sym-bar-track">
+            <div class="sym-bar-fill" style="width:${pct}%;background:${color};"></div>
+          </div>
+        </div>
+        <div style="width:64px;text-align:right;font-size:12px;font-weight:700;color:${color};">${fmt(val)}</div>
+      </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// WIDGET: CHARTS
 // ═══════════════════════════════════════════════════════════
 function renderCharts(trades) {
   const closed = trades.filter(t => t.status !== 'open');
   const monthly = {};
   closed.forEach(t => {
-    const key = t.date.slice(0,7);
+    const key = t.date.slice(0, 7);
     monthly[key] = (monthly[key] || 0) + cashFlow(t);
   });
   const keys   = Object.keys(monthly).sort();
   const labels = keys.map(k => {
     const [y, m] = k.split('-');
-    return new Date(+y, +m-1).toLocaleDateString('en-US', {month:'short', year:'2-digit'});
+    return new Date(+y, +m - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
   });
   const values = keys.map(k => monthly[k]);
   let running = 0;
@@ -386,7 +698,6 @@ function renderCharts(trades) {
 
   Chart.defaults.color       = '#475569';
   Chart.defaults.borderColor = '#1a2540';
-
   if (barInst)  barInst.destroy();
   if (lineInst) lineInst.destroy();
 
@@ -394,7 +705,7 @@ function renderCharts(trades) {
     x: { grid: { display: false }, ticks: { font: { size: 10 } } },
     y: { grid: { color: '#1a2540' }, ticks: { font: { size: 10 }, callback: v => '$' + v.toLocaleString() } }
   };
-  const tooltipFmt = { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } };
+  const tipFmt = { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } };
 
   barInst = new Chart(document.getElementById('barChart'), {
     type: 'bar',
@@ -407,11 +718,8 @@ function renderCharts(trades) {
         borderWidth: 1, borderRadius: 5,
       }]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: tooltipFmt },
-      scales: scaleOpts,
-    }
+    options: { responsive: true, maintainAspectRatio: false,
+               plugins: { legend: { display: false }, tooltip: tipFmt }, scales: scaleOpts }
   });
 
   lineInst = new Chart(document.getElementById('lineChart'), {
@@ -419,21 +727,48 @@ function renderCharts(trades) {
     data: {
       labels,
       datasets: [{
-        data: cumul,
-        borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)',
+        data: cumul, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)',
         fill: true, tension: 0.35, pointRadius: 3, pointBackgroundColor: '#3b82f6',
       }]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: tooltipFmt },
-      scales: scaleOpts,
-    }
+    options: { responsive: true, maintainAspectRatio: false,
+               plugins: { legend: { display: false }, tooltip: tipFmt }, scales: scaleOpts }
   });
 }
 
 // ═══════════════════════════════════════════════════════════
-// TRADE TABLE
+// WIDGET: OPEN POSITIONS
+// ═══════════════════════════════════════════════════════════
+function renderOpenPos(trades) {
+  const open = trades.filter(t => t.status === 'open');
+  document.getElementById('openCount').textContent = `${open.length} position${open.length !== 1 ? 's' : ''}`;
+
+  if (!open.length) {
+    document.getElementById('openBody').innerHTML =
+      `<tr><td colspan="6" style="text-align:center;color:#334155;padding:24px;">No open positions</td></tr>`;
+    return;
+  }
+  const rows = open.map(t => {
+    const dte   = calcDTE(t.exp);
+    const risk  = openPremium(t);
+    const acct  = t.acct === 'individual' ? '···1234' : '···5678';
+    const dteCls = dte <= 7 ? 'color:#ef4444;font-weight:700;' : dte <= 14 ? 'color:#f59e0b;font-weight:600;' : 'color:#60a5fa;';
+    const strat = `<span class="badge b-gray">${t.strategy}</span>`;
+    return `<tr>
+      <td><div style="font-weight:700;">${t.sym}</div></td>
+      <td>${strat}</td>
+      <td><div style="font-weight:600;">${t.strike}${t.strategy==='CC'?'C':'P'}</div>
+          <div style="font-size:11px;color:#475569;">${t.exp}</div></td>
+      <td style="font-size:12px;color:#64748b;">${acct}</td>
+      <td style="text-align:right;${dteCls}">${dte}d</td>
+      <td style="text-align:right;font-weight:700;color:#f59e0b;">${fmt(risk)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('openBody').innerHTML = rows;
+}
+
+// ═══════════════════════════════════════════════════════════
+// WIDGET: TRADE LOG
 // ═══════════════════════════════════════════════════════════
 const BADGE = {
   expired: ['b-green',  'Expired ✓'],
@@ -442,36 +777,33 @@ const BADGE = {
   open:    ['b-gray',   'Open'],
 };
 
-function renderTable(trades) {
-  const sorted = [...trades].sort((a,b) => new Date(b.date) - new Date(a.date));
+function renderTradeLog(trades) {
+  const sorted = [...trades].sort((a, b) => new Date(b.date) - new Date(a.date));
   document.getElementById('tradeCount').textContent = `${sorted.length} trades`;
 
   const rows = sorted.map(t => {
     const cf  = cashFlow(t);
     const op  = openPremium(t);
     const val = cf !== null
-      ? `<span class="${cf>=0?'positive':'negative'}" style="font-weight:700;">${fmt(cf)}</span>`
+      ? `<span class="${cf >= 0 ? 'positive' : 'negative'}" style="font-weight:700;">${fmt(cf)}</span>`
       : `<span style="color:#f59e0b;font-weight:700;">${fmt(op)}</span>`;
     const [bc, bl] = BADGE[t.status] || BADGE.open;
-    const acct    = t.acct === 'individual' ? '···1234' : '···5678';
-    const desc    = `${t.strike}C  ${t.exp}`;
-    const label   = t.contracts > 1 ? `${t.contracts}x CC` : 'CC';
-    const dateStr = new Date(t.date).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    const acct  = t.acct === 'individual' ? '···1234' : '···5678';
+    const dateStr = new Date(t.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     return `<tr>
-      <td><div style="font-weight:600;font-size:13px;">${dateStr}</div>
-          <div style="font-size:10px;color:#334155;">'26 · ${acct}</div></td>
-      <td><div style="font-weight:700;">${t.sym}</div>
-          <div style="font-size:11px;color:#475569;">${desc}</div></td>
-      <td style="font-size:12px;color:#64748b;">${label}</td>
+      <td><div style="font-weight:600;font-size:13px;">${dateStr}</div></td>
+      <td><div style="font-weight:700;">${t.sym}</div></td>
+      <td><span class="badge b-gray">${t.strategy}</span></td>
+      <td><div style="font-weight:600;">${t.strike}${t.strategy==='CC'?'C':'P'}</div>
+          <div style="font-size:11px;color:#475569;">${t.exp}</div></td>
+      <td style="font-size:12px;color:#64748b;">${acct}</td>
       <td><span class="badge ${bc}">${bl}</span></td>
       <td style="text-align:right;">${val}</td>
     </tr>`;
   }).join('');
 
   document.getElementById('tradeBody').innerHTML = rows || `
-    <tr><td colspan="5" style="text-align:center;color:#334155;padding:30px;">
-      No trades in this period
-    </td></tr>`;
+    <tr><td colspan="7" style="text-align:center;color:#334155;padding:30px;">No trades in this period</td></tr>`;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -479,12 +811,18 @@ function renderTable(trades) {
 // ═══════════════════════════════════════════════════════════
 function render() {
   const trades = filtered();
-  renderCards(trades);
-  renderCharts(trades);
-  renderTable(trades);
+  if (widgetPrefs.has('key-stats'))  renderKeyStats(trades);
+  if (widgetPrefs.has('perf-cards')) renderPerfCards(trades);
+  if (widgetPrefs.has('by-symbol'))  renderBySymbol(trades);
+  if (widgetPrefs.has('charts'))     renderCharts(trades);
+  if (widgetPrefs.has('open-pos'))   renderOpenPos(trades);
+  if (widgetPrefs.has('trade-log'))  renderTradeLog(trades);
 }
 
-document.addEventListener('DOMContentLoaded', render);
+document.addEventListener('DOMContentLoaded', () => {
+  applyPrefs();
+  render();
+});
 </script>
 </body>
 </html>
