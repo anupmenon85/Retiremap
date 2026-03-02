@@ -94,22 +94,36 @@
                       transform: translateX(100%); transition: transform 0.25s ease;
                       display: flex; flex-direction: column; }
     .sources-drawer.open { transform: translateX(0); }
-    /* Sources button */
-    .sources-btn { background: #0d1829; border: 1px solid #1e2d45; border-radius: 8px;
-                   padding: 4px 10px; font-size: 12px; font-weight: 600; color: #64748b;
-                   cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-    .sources-btn:hover { color: #94a3b8; border-color: #2d4060; }
+    /* Connect button — premium pill */
+    .connect-btn { background: #0d1e38; border: 1px solid #2a3f5f; border-radius: 8px;
+                   padding: 5px 13px; font-size: 12px; font-weight: 700; color: #60a5fa;
+                   cursor: pointer; transition: all 0.15s; white-space: nowrap; letter-spacing: 0.01em; }
+    .connect-btn:hover { background: #112340; border-color: #3b82f6; color: #93c5fd;
+                         box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
     /* CSV drop zone */
-    .dropzone { border: 2px dashed #1e2d45; border-radius: 10px; padding: 22px 16px;
+    .dropzone { border: 2px dashed #1a2d42; border-radius: 10px; padding: 20px 16px;
                 text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s;
                 background: #080d1a; }
     .dropzone:hover, .dropzone.drag-over { border-color: #3b82f6; background: #080f20; }
     /* Broker tile */
-    .broker-tile { background: #0d1829; border: 1px solid #1e2d45; border-radius: 10px;
-                   padding: 12px 11px; display: flex; flex-direction: column; gap: 8px; }
+    .broker-tile { background: #09162a; border: 1px solid #192c42; border-radius: 12px;
+                   padding: 14px 16px; display: flex; align-items: center; gap: 13px;
+                   transition: border-color 0.15s; }
+    .broker-tile.live:hover { border-color: #2a3f5f; }
+    /* Sign-in CTA on broker tile */
+    .sign-in-btn { display: flex; align-items: center; gap: 5px; padding: 6px 13px;
+                   background: rgba(29,78,216,0.13); border: 1px solid rgba(59,130,246,0.28);
+                   border-radius: 8px; color: #60a5fa; font-size: 11px; font-weight: 700;
+                   cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
+    .sign-in-btn:hover { background: rgba(29,78,216,0.22); border-color: #3b82f6; color: #93c5fd; }
+    /* Coming-soon badge on broker tile */
+    .soon-badge { padding: 4px 10px; background: transparent; border: 1px solid #1a2d42;
+                  border-radius: 6px; color: #2d4060; font-size: 10px; font-weight: 700;
+                  letter-spacing: 0.07em; white-space: nowrap; flex-shrink: 0; }
     /* Chart expand */
     #barPane, #linePane { transition: height 0.28s ease; }
     .chart-expanded #barPane, .chart-expanded #linePane { height: 280px !important; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     /* Show-more footer */
     .show-more-row { text-align: center; padding: 9px; border-top: 1px solid #1e2d45; }
     .show-more-btn { background: none; border: 1px solid #1e2d45; border-radius: 8px;
@@ -143,9 +157,17 @@
 
 <!-- ── SOURCES DRAWER ── -->
 <div class="sources-drawer" id="sourcesDrawer">
-  <div style="padding:18px 20px;border-bottom:1px solid #1e2d45;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-    <div style="font-size:15px;font-weight:700;color:#f1f5f9;">Data Sources</div>
-    <button onclick="closeAllDrawers()" style="background:none;border:none;color:#475569;font-size:18px;cursor:pointer;line-height:1;">✕</button>
+  <div style="padding:20px 22px 16px;border-bottom:1px solid #1a2d42;flex-shrink:0;
+              background:linear-gradient(180deg,#0c1829 0%,#0c1525 100%);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#f1f5f9;letter-spacing:-0.01em;">Connect Accounts</div>
+        <div style="font-size:11px;color:#3d5a7a;margin-top:3px;">Sync trades &amp; positions automatically</div>
+      </div>
+      <button onclick="closeAllDrawers()" style="background:none;border:none;color:#334155;font-size:18px;
+              cursor:pointer;line-height:1;padding:2px 0 0 8px;transition:color 0.15s;"
+              onmouseover="this.style.color='#64748b'" onmouseout="this.style.color='#334155'">✕</button>
+    </div>
   </div>
   <div style="overflow-y:auto;flex:1;padding-bottom:28px;" id="sourcesList"></div>
 </div>
@@ -159,7 +181,10 @@
     <div style="display:flex;align-items:center;gap:8px;">
       <div style="font-size:10px;color:#334155;" id="lastSync">Never synced</div>
       <button class="sync-btn" onclick="handleSync()" id="syncBtn">↻ Sync</button>
-      <button class="sources-btn" onclick="openConnectors()" title="Import trades &amp; broker connections">⬆ Sources</button>
+      <button class="connect-btn" onclick="openConnectors()" title="Connect broker accounts">
+        <svg style="display:inline;vertical-align:-1px;" width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M10 2l4 4-4 4M6 14l-4-4 4-4"/></svg>
+        Connect</button>
       <button class="gear-btn" onclick="openCustomize()" title="Customize dashboard">⚙</button>
     </div>
   </div>
@@ -584,10 +609,42 @@ function closeConnectors() { closeAllDrawers(); }
 
 function buildSourcesList() {
   const secHead = label => `
-    <div style="padding:11px 20px 8px;background:#070c18;border-top:1px solid #1e2d45;">
+    <div style="padding:18px 20px 9px;">
       <span style="font-size:10px;font-weight:800;text-transform:uppercase;
-                   letter-spacing:0.09em;color:#3b82f6;">${label}</span>
+                   letter-spacing:0.1em;color:#2d4a6a;">${label}</span>
     </div>`;
+
+  const brokers = [
+    { id: 'tastytrade', name: 'TastyTrade', init: 'TT', color: '#f97316',
+      sub: 'Options & futures', live: true },
+    { id: 'ibkr',    name: 'IBKR',    init: 'IB', color: '#2563eb',
+      sub: 'Stocks, options & futures', live: false },
+    { id: 'schwab',  name: 'Schwab',  init: 'SW', color: '#059669',
+      sub: 'Stocks & options', live: false },
+    { id: 'fidelity',name: 'Fidelity',init: 'FD', color: '#7c3aed',
+      sub: 'Stocks & options', live: false },
+  ];
+
+  const brokerList = brokers.map(b => `
+    <div class="broker-tile ${b.live ? 'live' : ''}" id="tile-${b.id}"
+         style="${b.live ? '' : 'opacity:0.55;'}">
+      <div style="width:36px;height:36px;border-radius:10px;background:${b.color}1a;
+                  border:1px solid ${b.color}40;display:flex;align-items:center;justify-content:center;
+                  font-size:11px;font-weight:900;color:${b.color};flex-shrink:0;">${b.init}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:${b.live ? '#c8d8f0' : '#4a6080'};
+                    line-height:1.2;">${b.name}</div>
+        <div style="font-size:11px;color:${b.live ? '#3d5a7a' : '#243346'};margin-top:1px;">${b.sub}</div>
+      </div>
+      ${b.live
+        ? `<button class="sign-in-btn" onclick="openBrokerConnect('${b.id}')">
+             Sign in
+             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M2 5h6M5 2l3 3-3 3"/></svg>
+           </button>`
+        : `<span class="soon-badge">SOON</span>`
+      }
+    </div>`).join('');
 
   const templateCsv = [
     'date,sym,strategy,strike,exp,contracts,sto,btc,status,acct',
@@ -598,59 +655,34 @@ function buildSourcesList() {
   const tmplHref = `data:text/csv;charset=utf-8,${encodeURIComponent(templateCsv)}`;
 
   const importSection = `
-    <div style="padding:12px 16px 0;">
+    <div style="padding:0 18px 6px;">
       <div class="dropzone" id="dropzone"
            ondrop="handleCsvDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)"
            onclick="document.getElementById('csvFileInput').click()">
-        <div style="font-size:26px;color:#334155;margin-bottom:6px;">⬆</div>
-        <div style="font-size:13px;font-weight:600;color:#64748b;">Drop CSV here or click to browse</div>
-        <div style="font-size:11px;color:#334155;margin-top:3px;">Supports OptionFlow template format</div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d4a6a" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 8px;display:block;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        <div style="font-size:12px;font-weight:700;color:#3d5a7a;">Upload trade history</div>
+        <div style="font-size:11px;color:#1e3047;margin-top:3px;">CSV · drag &amp; drop or click to browse</div>
         <input id="csvFileInput" type="file" accept=".csv,.txt" style="display:none;"
                onchange="handleCsvFile(this.files[0])"/>
       </div>
-      <div style="margin-top:7px;text-align:center;">
+      <div style="margin-top:8px;text-align:center;">
         <a href="${tmplHref}" download="optionflow-template.csv"
-           style="font-size:11px;color:#3b82f6;text-decoration:none;">↓ Download template CSV</a>
+           style="font-size:11px;color:#2d4a6a;text-decoration:none;letter-spacing:0.01em;">
+          ↓ Download column template</a>
       </div>
-      <div id="importPreview" style="display:none;margin-top:10px;background:#080d1a;
-                                     border:1px solid #1e2d45;border-radius:8px;padding:11px;
+      <div id="importPreview" style="display:none;margin-top:10px;background:#06101e;
+                                     border:1px solid #192c42;border-radius:9px;padding:11px;
                                      font-size:12px;color:#94a3b8;line-height:1.5;"></div>
       <div id="importActions" style="display:none;margin-top:8px;gap:8px;"></div>
     </div>`;
 
-  const brokers = [
-    { id: 'tastytrade', name: 'TastyTrade', init: 'TT', color: '#f97316', active: true,  sub: 'API token sync' },
-    { id: 'ibkr',       name: 'IBKR',       init: 'IB', color: '#1d4ed8', active: false, sub: 'Interactive Brokers' },
-    { id: 'schwab',     name: 'Schwab',      init: 'SW', color: '#059669', active: false, sub: 'Charles Schwab' },
-    { id: 'fidelity',   name: 'Fidelity',    init: 'FD', color: '#7c3aed', active: false, sub: 'Fidelity Investments' },
-  ];
-
-  const brokerGrid = brokers.map(b => `
-    <div class="broker-tile">
-      <div style="display:flex;align-items:center;gap:9px;">
-        <div style="width:30px;height:30px;border-radius:50%;background:${b.color}22;
-                    border:1px solid ${b.color}55;display:flex;align-items:center;
-                    justify-content:center;font-size:10px;font-weight:800;color:${b.color};">${b.init}</div>
-        <div>
-          <div style="font-size:12px;font-weight:700;color:#cbd5e1;">${b.name}</div>
-          <div style="font-size:10px;color:#475569;">${b.sub}</div>
-        </div>
-      </div>
-      ${b.active
-        ? `<button onclick="openBrokerConnect('${b.id}')"
-                   style="width:100%;padding:5px;background:#1d4ed8;border:none;border-radius:7px;
-                          color:#fff;font-size:11px;font-weight:700;cursor:pointer;">Connect</button>`
-        : `<div style="text-align:center;padding:4px;font-size:10px;font-weight:700;
-                       color:#334155;border:1px solid #1e2d45;border-radius:7px;letter-spacing:0.04em;">
-             COMING SOON</div>`
-      }
-    </div>`).join('');
-
   document.getElementById('sourcesList').innerHTML =
-    secHead('Manual Import') + importSection +
     secHead('Broker Connections') +
-    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px 4px;">${brokerGrid}</div>` +
-    `<div id="brokerConnectArea" style="display:none;padding:0 16px;"></div>`;
+    `<div style="display:flex;flex-direction:column;gap:7px;padding:0 18px 6px;">${brokerList}</div>` +
+    `<div id="brokerConnectArea" style="display:none;padding:0 18px 6px;"></div>` +
+    secHead('Manual Import') + importSection;
 }
 
 // ── CSV import ────────────────────────────────────────────────
@@ -734,35 +766,67 @@ function cancelImport() {
   document.getElementById('importActions').style.display = 'none';
 }
 
-// ── Broker connect form ───────────────────────────────────────
+// ── Broker connect flow (OAuth-style, no API keys) ───────────
 function openBrokerConnect(id) {
-  const names = { tastytrade: 'TastyTrade' };
-  const name  = names[id] || id;
-  const area  = document.getElementById('brokerConnectArea');
+  const meta = {
+    tastytrade: { name: 'TastyTrade', color: '#f97316', init: 'TT',
+                  desc: 'Log in to TastyTrade to grant OptionFlow read-only access to your positions and trade history.' },
+  };
+  const b    = meta[id] || { name: id, color: '#3b82f6', init: '?', desc: '' };
+  const area = document.getElementById('brokerConnectArea');
   area.style.display = 'block';
   area.innerHTML = `
-    <div style="background:#080d1a;border:1px solid #1e2d45;border-radius:8px;padding:14px;margin-top:4px;">
-      <div style="font-size:13px;font-weight:700;color:#cbd5e1;margin-bottom:3px;">Connect ${name}</div>
-      <div style="font-size:11px;color:#475569;margin-bottom:10px;">Session token from ${name} web app</div>
-      <input id="brokerTokenInput" type="text" placeholder="Paste API token…"
-             style="width:100%;background:#0d1829;border:1px solid #1e2d45;border-radius:7px;
-                    padding:7px 11px;font-size:12px;color:#cbd5e1;outline:none;
-                    box-sizing:border-box;margin-bottom:8px;"/>
-      <button onclick="tryBrokerSync('${name}')"
-              style="width:100%;padding:7px;background:#1d4ed8;border:none;border-radius:7px;
-                     color:#fff;font-size:12px;font-weight:600;cursor:pointer;box-sizing:border-box;">
-        Sync ${name}</button>
+    <div style="background:#06101e;border:1px solid #192c42;border-radius:12px;padding:18px 16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="width:32px;height:32px;border-radius:9px;background:${b.color}1a;
+                    border:1px solid ${b.color}40;display:flex;align-items:center;justify-content:center;
+                    font-size:11px;font-weight:900;color:${b.color};">${b.init}</div>
+        <div style="font-size:14px;font-weight:700;color:#c8d8f0;">Sign in to ${b.name}</div>
+      </div>
+      <p style="font-size:12px;color:#3d5a7a;line-height:1.6;margin:0 0 6px;">
+        ${b.desc}
+      </p>
+      <p style="font-size:11px;color:#1e3047;line-height:1.5;margin:0 0 16px;">
+        Your login credentials are never shared with or stored by OptionFlow.
+      </p>
+      <button onclick="triggerOAuth('${b.name}')"
+              style="width:100%;padding:10px;background:#1d4ed8;border:none;border-radius:9px;
+                     color:#fff;font-size:13px;font-weight:700;cursor:pointer;
+                     display:flex;align-items:center;justify-content:center;gap:7px;box-sizing:border-box;">
+        Continue to ${b.name}
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 6h8M6 2l4 4-4 4"/></svg>
+      </button>
+      <button onclick="document.getElementById('brokerConnectArea').style.display='none'"
+              style="width:100%;margin-top:8px;padding:8px;background:transparent;
+                     border:1px solid #192c42;border-radius:9px;color:#2d4a6a;
+                     font-size:12px;cursor:pointer;box-sizing:border-box;">Cancel</button>
     </div>`;
+  area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-function tryBrokerSync(name) {
+function triggerOAuth(name) {
   const area = document.getElementById('brokerConnectArea');
   area.innerHTML = `
-    <div style="background:#080d1a;border:1px solid #1e2d45;border-radius:8px;
-                padding:14px;margin-top:4px;text-align:center;">
-      <div style="font-size:13px;font-weight:700;color:#f59e0b;margin-bottom:5px;">⚡ Coming in v0.3</div>
-      <div style="font-size:11px;color:#475569;line-height:1.5;">Live ${name} sync is in development.<br>
-        Use manual CSV import in the meantime.</div>
+    <div style="background:#06101e;border:1px solid #192c42;border-radius:12px;
+                padding:22px 16px;text-align:center;">
+      <div style="width:36px;height:36px;border-radius:50%;border:2px solid #1d4ed8;
+                  border-top-color:transparent;margin:0 auto 14px;
+                  animation:spin 0.8s linear infinite;"></div>
+      <div style="font-size:13px;font-weight:700;color:#c8d8f0;margin-bottom:6px;">
+        Opening ${name}…</div>
+      <div style="font-size:11px;color:#2d4a6a;line-height:1.5;">
+        Live sync is coming in the next release.<br>Manual CSV import is available now.</div>
     </div>`;
+  setTimeout(() => {
+    area.innerHTML = `
+      <div style="background:#06101e;border:1px solid #192c42;border-radius:12px;
+                  padding:18px 16px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:8px;">⚡</div>
+        <div style="font-size:13px;font-weight:700;color:#c8d8f0;margin-bottom:5px;">Coming in v0.3</div>
+        <div style="font-size:11px;color:#2d4a6a;line-height:1.6;">
+          Live ${name} sync is in development.<br>Use CSV import while you wait.</div>
+      </div>`;
+  }, 1800);
 }
 
 // ═══════════════════════════════════════════════════════════
