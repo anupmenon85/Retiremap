@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>OptionFlow — Options Income Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -423,42 +422,52 @@ function resetWidgets() {
 }
 
 function buildWidgetList() {
-  const sectionHeader = label => `
-    <div style="padding:10px 20px 6px;font-size:10px;font-weight:700;text-transform:uppercase;
-                letter-spacing:0.08em;color:#334155;">${label}</div>`;
+  const secHead = (label) => `
+    <div style="padding:10px 20px 7px;background:#070c18;border-top:1px solid #1e2d45;
+                display:flex;align-items:center;gap:6px;">
+      <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.09em;
+                   color:#3b82f6;">${label}</span>
+    </div>`;
 
-  const widgetRows = WIDGET_DEFS.map(w => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;">
+  // Full-width rows with description (for section widgets)
+  const widgetRow = (w, on, onchange) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 20px 9px 22px;">
       <div>
-        <div style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:2px;">${w.label}</div>
-        <div style="font-size:11px;color:#475569;">${w.desc}</div>
+        <div style="font-size:13px;font-weight:600;color:#cbd5e1;line-height:1.3;">${w.label}</div>
+        <div style="font-size:11px;color:#475569;margin-top:1px;">${w.desc}</div>
       </div>
       <label class="toggle-wrap" style="margin-left:14px;">
-        <input type="checkbox" ${widgetPrefs.has(w.id) ? 'checked' : ''}
-               onchange="toggleWidget('${w.id}', this.checked)" />
+        <input type="checkbox" ${on ? 'checked' : ''} onchange="${onchange}" />
         <span class="toggle-track"></span>
       </label>
     </div>
-    <hr class="drawer-rule" />`).join('');
+    <hr class="drawer-rule"/>`;
 
-  const statRows = (group) => STAT_DEFS.filter(s => s.group === group).map(s => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:2px;">${s.label}</div>
-        <div style="font-size:11px;color:#475569;">${s.desc}</div>
-      </div>
-      <label class="toggle-wrap" style="margin-left:14px;">
-        <input type="checkbox" ${statPrefs.has(s.id) ? 'checked' : ''}
-               onchange="toggleStat('${s.id}', this.checked)" />
-        <span class="toggle-track"></span>
-      </label>
-    </div>
-    <hr class="drawer-rule" />`).join('');
+  // Compact 2-column chip grid for metric pills
+  const metricGrid = (group) => {
+    const chips = STAT_DEFS.filter(s => s.group === group).map(s => `
+      <label style="display:flex;align-items:center;justify-content:space-between;
+                    background:#0d1829;border:1px solid #1e2d45;border-radius:8px;
+                    padding:9px 11px;cursor:pointer;transition:border-color 0.15s;"
+             onmouseover="this.style.borderColor='#2d4060'"
+             onmouseout="this.style.borderColor='#1e2d45'">
+        <span style="font-size:12px;font-weight:600;color:#cbd5e1;">${s.label}</span>
+        <div class="toggle-wrap" style="margin-left:8px;pointer-events:none;">
+          <input type="checkbox" ${statPrefs.has(s.id) ? 'checked' : ''}
+                 onchange="toggleStat('${s.id}', this.checked)" style="pointer-events:auto;" />
+          <span class="toggle-track"></span>
+        </div>
+      </label>`).join('');
+    return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:8px 16px 12px;">${chips}</div>`;
+  };
 
   document.getElementById('widgetList').innerHTML =
-    sectionHeader('Widgets') + widgetRows +
-    sectionHeader('Key Stats Metrics') + statRows('key') +
-    sectionHeader('Performance Metrics') + statRows('perf');
+    secHead('Dashboard Sections') +
+    WIDGET_DEFS.map(w =>
+      widgetRow(w, widgetPrefs.has(w.id), `toggleWidget('${w.id}',this.checked)`)
+    ).join('') +
+    secHead('Key Stats Cards') + metricGrid('key') +
+    secHead('Performance Cards') + metricGrid('perf');
 }
 
 function toggleWidget(id, on) {
@@ -556,8 +565,6 @@ let selAccount  = 'all';
 let selPeriod   = 'YTD';
 let activeChart = 'bar';
 let tradesOpen  = true;
-let barInst     = null;
-let lineInst    = null;
 
 function filtered() {
   const start = periodStart(selPeriod);
@@ -767,23 +774,14 @@ function renderCharts(trades) {
     const key = t.date.slice(0, 7);
     monthly[key] = (monthly[key] || 0) + cashFlow(t);
   });
-  const keys   = Object.keys(monthly).sort();
+  const keys = Object.keys(monthly).sort();
 
-  if (barInst)  { barInst.destroy();  barInst  = null; }
-  if (lineInst) { lineInst.destroy(); lineInst = null; }
-
+  const noData = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#334155;font-size:13px;">No closed trades in this period</div>`;
   if (!keys.length) {
-    const noData = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#334155;font-size:13px;">No closed trades in this period</div>`;
     document.getElementById('barPane').innerHTML  = noData;
     document.getElementById('linePane').innerHTML = noData;
     return;
   }
-
-  // Restore canvases if they were replaced by the no-data message
-  if (!document.getElementById('barChart'))
-    document.getElementById('barPane').innerHTML  = '<canvas id="barChart"></canvas>';
-  if (!document.getElementById('lineChart'))
-    document.getElementById('linePane').innerHTML = '<canvas id="lineChart"></canvas>';
 
   const labels = keys.map(k => {
     const [y, m] = k.split('-');
@@ -792,43 +790,66 @@ function renderCharts(trades) {
   const values = keys.map(k => monthly[k]);
   let running = 0;
   const cumul = values.map(v => { running += v; return running; });
+  const N = values.length;
 
-  Chart.defaults.color       = '#475569';
-  Chart.defaults.borderColor = '#1a2540';
+  // ── Bar chart (pure SVG, no library) ───────────────────────
+  const COL   = 52;
+  const BAR_H = 96;
+  const VAL_H = 14;
+  const LBL_H = 18;
+  const bvW   = N * COL + 8;
+  const bvH   = VAL_H + BAR_H + LBL_H;
+  const maxAbs = Math.max(...values.map(Math.abs), 1);
 
-  const scaleOpts = {
-    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-    y: { grid: { color: '#1a2540' }, ticks: { font: { size: 10 }, callback: v => '$' + v.toLocaleString() } }
-  };
-  const tipFmt = { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } };
+  const bars = values.map((v, i) => {
+    const x   = 4 + i * COL + COL * 0.12;
+    const bw  = COL * 0.76;
+    const bh  = Math.max(2, Math.round(Math.abs(v) / maxAbs * BAR_H * 0.9));
+    const by  = VAL_H + BAR_H - bh;
+    const cx  = x + bw / 2;
+    const col = v >= 0 ? '#10b981' : '#ef4444';
+    const absV = Math.abs(v);
+    const vStr = absV >= 1000 ? `${v < 0 ? '-' : ''}$${(absV / 1000).toFixed(1)}k` : fmt(v);
+    return `<rect x="${x}" y="${by}" width="${bw}" height="${bh}" fill="${col}" opacity="0.8" rx="2"/>
+      <text x="${cx}" y="${VAL_H - 2}" text-anchor="middle" font-size="9" fill="${col}" font-weight="600">${vStr}</text>
+      <text x="${cx}" y="${VAL_H + BAR_H + LBL_H - 3}" text-anchor="middle" font-size="9" fill="#475569">${labels[i]}</text>`;
+  }).join('');
 
-  barInst = new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: values.map(v => v >= 0 ? 'rgba(16,185,129,0.65)' : 'rgba(239,68,68,0.65)'),
-        borderColor:     values.map(v => v >= 0 ? '#10b981' : '#ef4444'),
-        borderWidth: 1, borderRadius: 5,
-      }]
-    },
-    options: { responsive: true, maintainAspectRatio: false,
-               plugins: { legend: { display: false }, tooltip: tipFmt }, scales: scaleOpts }
-  });
+  document.getElementById('barPane').innerHTML =
+    `<svg viewBox="0 0 ${bvW} ${bvH}" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet">${bars}</svg>`;
 
-  lineInst = new Chart(document.getElementById('lineChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        data: cumul, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)',
-        fill: true, tension: 0.35, pointRadius: 3, pointBackgroundColor: '#3b82f6',
-      }]
-    },
-    options: { responsive: true, maintainAspectRatio: false,
-               plugins: { legend: { display: false }, tooltip: tipFmt }, scales: scaleOpts }
-  });
+  // ── Cumulative line chart (pure SVG) ────────────────────────
+  const W = 420, H = 130;
+  const pL = 44, pR = 8, pT = 10, pB = 22;
+  const plotW = W - pL - pR;
+  const plotH = H - pT - pB;
+  const minC = Math.min(0, ...cumul);
+  const maxC = Math.max(...cumul, 1);
+  const rng  = maxC - minC || 1;
+  const xF = i => pL + (N > 1 ? (i / (N - 1)) * plotW : plotW / 2);
+  const yF = v => pT + plotH - ((v - minC) / rng) * plotH;
+
+  const pts  = cumul.map((v, i) => `${xF(i)},${yF(v)}`).join(' ');
+  const area = `M${xF(0)},${yF(cumul[0])}${cumul.map((v, i) => ` L${xF(i)},${yF(v)}`).join('')} L${xF(N - 1)},${pT + plotH} L${xF(0)},${pT + plotH}Z`;
+
+  const gridLines = [0, 0.5, 1].map(t => {
+    const v = minC + t * rng;
+    const y = yF(v);
+    const lbl = Math.abs(v) >= 1000 ? `$${(v / 1000).toFixed(1)}k` : fmt(v);
+    return `<line x1="${pL}" y1="${y}" x2="${W - pR}" y2="${y}" stroke="#1a2540" stroke-width="0.5"/>
+      <text x="${pL - 3}" y="${y}" text-anchor="end" font-size="8" fill="#475569" dominant-baseline="middle">${lbl}</text>`;
+  }).join('');
+
+  const dots   = cumul.map((v, i) => `<circle cx="${xF(i)}" cy="${yF(v)}" r="3" fill="#3b82f6"/>`).join('');
+  const xLbls  = labels.map((l, i) => `<text x="${xF(i)}" y="${H - 4}" text-anchor="middle" font-size="8" fill="#475569">${l}</text>`).join('');
+
+  document.getElementById('linePane').innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet">
+      ${gridLines}
+      <path d="${area}" fill="rgba(59,130,246,0.1)"/>
+      <polyline points="${pts}" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linejoin="round"/>
+      ${dots}${xLbls}
+    </svg>`;
 }
 
 // ═══════════════════════════════════════════════════════════
